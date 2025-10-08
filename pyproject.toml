@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+# Keep the project name as requested for the course; package stays lowercase.
+name = "AkujobiP1"
+version = "0.1.0"
+description = "CSC456 Process Management Shell (POSIX syscalls in Python)"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "John Akujobi" }]
+
+[project.scripts]
+# `akujobip1` will start the shell
+akujobip1 = "akujobip1.shell:cli"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "ruff>=0.5", "black>=24"]
