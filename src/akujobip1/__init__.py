@@ -4,6 +4,6 @@ AkujobiP1Shell - A simple shell implementation using POSIX system calls.
 This package provides a basic shell implementation for CSC456 Programming Assignment 1.
 """
 
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 __author__ = "John Akujobi"
 
