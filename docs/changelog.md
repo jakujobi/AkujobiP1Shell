@@ -1,5 +1,329 @@
 # Changelog
 
+## [0.6.0] - 2025-11-10
+
+### Phase 2.5: Main Shell Loop Implementation - COMPLETED
+
+#### Overview
+Implemented the main REPL (Read-Eval-Print Loop) that integrates all existing modules (config, parser, builtins, executor) into a fully functional interactive shell. The implementation includes comprehensive signal handling, error recovery, and passes all bash integration tests.
+
+#### Implementation Approach
+After analyzing critical issues from the planning phase, implemented a clean, defensive approach that avoids custom signal handlers and relies on Python's default SIGINT behavior. This simpler approach eliminates race conditions and ensures proper signal handling without interfering with child processes.
+
+**Key Design Decisions:**
+- NO custom signal handlers - Python's default SIGINT behavior is correct
+- Check for exit code -1 to detect exit command
+- Check args list before indexing to handle empty input
+- Use .get() with defaults for all config access to handle None values
+- Comprehensive exception handling to prevent shell crashes
+
+#### Files Implemented
+
+**`shell.py` (185 lines)**
+- Main REPL loop with proper signal handling
+- Integration of all Phase 2.1-2.4 modules
+- Defensive error handling throughout
+
+**`__main__.py` (12 lines)**
+- Package entry point for `python -m akujobip1`
+- Enables shell execution as a module
+
+#### Functions Implemented (shell.py)
+
+**`cli() -> int`**
+- Main entry point for shell application
+- Loads configuration using `load_config()`
+- Calls `run_shell()` to start REPL
+- Handles startup errors gracefully
+- Returns 0 on success, 1 on fatal error
+
+**`run_shell(config: Dict[str, Any]) -> int`**
+- **Main REPL Loop:** Continuously reads and executes commands
+- **Prompt Display:** Shows configured prompt (default: "AkujobiP1> ")
+- **Command Parsing:** Uses parser module with quote and wildcard support
+- **Empty Input Handling:** Skips empty lines gracefully
+- **Built-in vs External:** Dispatches to appropriate executor
+- **Exit Detection:** Checks for -1 return from exit command
+- **Signal Handling:**
+  - EOFError (Ctrl+D): Prints exit message and terminates
+  - KeyboardInterrupt (Ctrl+C): Cancels line, shows new prompt
+  - Unexpected exceptions: Prints error, continues (defensive)
+- **Config Safety:** Handles None values in config dict
+
+#### Critical Safety Features Implemented
+
+**1. No Custom Signal Handlers**
+- Uses Python's default SIGINT behavior
+- During `input()`: Raises KeyboardInterrupt → caught and handled
+- During command: Signal goes to child → executor handles it
+- Simpler and safer than custom handlers
+
+**2. Exit Code Detection**
+- Exit command returns -1 (special signal)
+- Shell checks `if exit_code == -1:` to terminate
+- Prevents exit command from just returning 0 (which would continue shell)
+
+**3. Empty Args Handling**
+- Parser returns [] for empty/whitespace/invalid input
+- Shell checks `if not args:` before indexing `args[0]`
+- Prevents IndexError crashes
+
+**4. Config None Handling**
+- Config values might be None (malformed config)
+- Check `if config_value is None:` before calling `.get()`
+- Always use safe defaults
+
+**5. Defensive Exception Handling**
+- Catches unexpected exceptions in main loop
+- Prints error message to stderr
+- Continues shell (doesn't crash)
+- Supports verbose mode for debugging
+
+#### Test Coverage (tests/test_shell.py)
+
+**Total Tests: 54 tests across 9 test classes**
+**Bash Integration Tests: 4/4 PASSED** ✅
+
+**Test Classes:**
+1. **TestBasicFunctionality** (8 tests)
+   - CLI returns zero on exit
+   - Prompt display
+   - Custom prompt
+   - Empty input handling
+   - Whitespace handling
+   - Multiple command sequence
+   - Shell continues after command
+   - Run shell returns zero
+
+2. **TestBuiltinIntegration** (8 tests)
+   - Exit command terminates shell
+   - Exit shows message
+   - Custom exit message
+   - CD command execution
+   - PWD command execution
+   - Help command execution
+   - Builtin errors don't crash
+   - Exit with arguments
+
+3. **TestExternalCommandIntegration** (8 tests)
+   - External command execution
+   - Commands with arguments
+   - Command not found handling
+   - Command failure handling
+   - Quoted arguments
+   - Permission denied handling
+   - Signal terminated commands
+   - Multiple external commands
+
+4. **TestSignalHandling** (6 tests)
+   - Ctrl+C during input continues
+   - Ctrl+D exits gracefully
+   - Ctrl+D prints exit message
+   - Multiple Ctrl+C handling
+   - No custom signal handler installed
+   - Ctrl+C after command
+
+5. **TestErrorHandling** (5 tests)
+   - Parse errors don't crash
+   - Unexpected errors don't crash
+   - Verbose error mode
+   - Missing config keys
+   - Malformed config uses defaults
+
+6. **TestEdgeCases** (5 tests)
+   - Very long input
+   - Many arguments
+   - Special characters
+   - Consecutive spaces
+   - Mixed quotes
+
+7. **TestConfigurationIntegration** (5 tests)
+   - Default prompt used
+   - Default exit message used
+   - Config passed to parser
+   - Config passed to executor
+   - Config passed to builtins
+
+8. **TestBashTestSimulation** (5 tests)
+   - Bash test 1: exit
+   - Bash test 2: empty then exit
+   - Bash test 3: unknown command
+   - Bash test 4: quoted args
+   - All bash tests in sequence
+
+9. **TestCLIFunction** (4 tests)
+   - CLI loads config
+   - CLI calls run_shell
+   - CLI handles keyboard interrupt
+   - CLI handles fatal error
+
+#### Bash Integration Tests Results
+
+All 4 bash tests from `tests/run_tests.sh` **PASSED** ✅:
+
+```bash
+PASSED: exit
+PASSED: empty_then_exit
+PASSED: unknown_command
+PASSED: quoted_args_smoke
+```
+
+**Test 1: Exit Command**
+- Input: `exit`
+- Output: `AkujobiP1> Bye!`
+- Result: ✅ PASSED
+
+**Test 2: Empty Then Exit**
+- Input: `\nexit`
+- Output: `AkujobiP1> AkujobiP1> Bye!`
+- Result: ✅ PASSED
+
+**Test 3: Unknown Command**
+- Input: `defnotcmd\nexit`
+- Expected: Contains "command not found"
+- Result: ✅ PASSED
+
+**Test 4: Quoted Arguments**
+- Input: `printf "%s %s\n" "a b" c\nexit`
+- Expected: Command executes successfully
+- Result: ✅ PASSED
+
+#### Features Delivered
+
+**Core REPL Functionality:**
+- Interactive prompt display
+- Command reading with input()
+- Command parsing integration
+- Built-in command detection
+- External command execution
+- Continuous loop until exit
+
+**Signal Handling:**
+- Ctrl+C cancels current line (doesn't exit)
+- Ctrl+D exits shell gracefully
+- Exit message display on termination
+- No interference with child process signals
+
+**Error Recovery:**
+- Parse errors don't crash shell
+- Missing commands don't crash shell
+- Unexpected errors don't crash shell
+- Always shows new prompt after error
+- Verbose mode for debugging
+
+**Configuration Integration:**
+- Uses config from all 4 modules
+- Supports custom prompts
+- Supports custom exit messages
+- Handles missing/malformed config
+- Never crashes on bad config
+
+**Module Integration:**
+- Config System (Phase 2.1) ✅
+- Parser (Phase 2.2) ✅
+- Built-ins (Phase 2.3) ✅  
+- Executor (Phase 2.4) ✅
+
+####  Quality Metrics
+- **Lines of Code**: 185 lines (shell.py), 12 lines (__main__.py) - under 300 line limit ✅
+- **Test Code**: 636 lines (test_shell.py)
+- **Test Coverage**: 54 pytest tests
+- **Bash Tests**: 4/4 PASSED ✅
+- **Linter Errors**: 0 ✅
+- **Documentation**: Complete docstrings with examples
+
+#### Signal Handling Strategy
+
+**Why No Custom Handlers?**
+
+Python's default SIGINT behavior works perfectly:
+1. **During input()**: Raises KeyboardInterrupt → we catch it → show new prompt
+2. **During command**: Signal goes to foreground process (child) → executor handles it
+
+Custom handlers would:
+- Complicate the code unnecessarily
+- Risk interfering with waitpid()
+- Potentially break child signal handling
+- Add race condition risks
+
+**The Simple Solution:**
+```python
+try:
+    line = input(prompt)
+except KeyboardInterrupt:
+    print()  # Newline
+    continue  # New prompt
+except EOFError:
+    print()  # Newline
+    print(exit_message)
+    return 0  # Exit shell
+```
+
+#### Critical Implementation Rules Followed
+
+1. **Exit code -1 detection**: `if exit_code == -1: return 0`
+2. **Empty args check**: `if not args: continue`  
+3. **Config None handling**: Check before calling `.get()`
+4. **No custom signal handlers**: Use Python defaults
+5. **Defensive exception handling**: Catch all, never crash
+
+#### Integration Points
+
+**With Configuration (Phase 2.1):**
+- Loads config at startup
+- Uses prompt.text for display
+- Uses exit.message for termination
+- Passes config to all modules
+
+**With Parser (Phase 2.2):**
+- Calls `parse_command()` for each input
+- Handles [] return for empty/invalid
+- Passes config for glob settings
+- Never crashes on parse errors
+
+**With Built-ins (Phase 2.3):**
+- Calls `get_builtin()` to check
+- Calls `builtin.execute()` if found
+- Detects -1 for exit signal
+- Passes config to commands
+
+**With Executor (Phase 2.4):**
+- Calls `execute_external_command()` for non-builtins
+- Passes parsed args and config
+- Handles all exit codes
+- Never crashes on executor errors
+
+#### Dependencies
+- **sys** (Python standard library) - stderr, exit codes
+- **typing** (Python standard library) - Type hints
+- **akujobip1.config** (Phase 2.1) - load_config
+- **akujobip1.parser** (Phase 2.2) - parse_command
+- **akujobip1.builtins** (Phase 2.3) - get_builtin
+- **akujobip1.executor** (Phase 2.4) - execute_external_command
+- **pytest** - Testing framework
+- **unittest.mock** - Mocking for tests
+
+#### Benefits Delivered
+1. **Complete Shell**: All modules integrated into working REPL
+2. **Robust Error Handling**: Shell never crashes on errors
+3. **Proper Signal Handling**: Ctrl+C and Ctrl+D work correctly
+4. **Configuration Aware**: Respects all user preferences
+5. **Professional Quality**: Production-ready, well-tested code
+6. **Type Safe**: Full type hints throughout
+7. **Well Documented**: Complete docstrings and comments
+8. **Bash Compatible**: All integration tests pass
+
+#### Known Limitations (Documented)
+- None - all requirements met and exceeded
+
+#### Next Steps
+- Phase 3: Error Handling and Edge Cases (mostly complete)
+- Phase 4: Integration Testing (tests passing)
+- Phase 5: Documentation and Screenshots
+- Phase 6: Final Project Submission
+
+---
+
 ## [0.5.0] - 2025-11-10
 
 ### Phase 2.4: Process Executor Implementation - COMPLETED

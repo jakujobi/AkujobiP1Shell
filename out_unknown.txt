@@ -1,0 +1,3 @@
+AkujobiP1> defnotcmd: command not found
+[Exit: 127]
+AkujobiP1> Bye!
