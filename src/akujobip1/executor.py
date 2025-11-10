@@ -2,7 +2,13 @@
 External command executor module.
 
 This module handles execution of external commands using POSIX
-system calls: fork(), execvp(), and wait().
+system calls: fork(), execvp(), and waitpid().
+
+POSIX References:
+    - fork(): https://pubs.opengroup.org/onlinepubs/9699919799/functions/fork.html
+    - exec family: https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
+    - waitpid(): https://pubs.opengroup.org/onlinepubs/9699919799/functions/wait.html
+    - Exit status macros: https://pubs.opengroup.org/onlinepubs/9699919799/functions/wait.html
 """
 
 import os
@@ -60,6 +66,12 @@ def execute_external_command(args: List[str], config: Dict[str, Any]) -> int:
         print(f"[About to fork for: {args[0]}]", file=sys.stderr)
 
     # Step 1: Fork the process
+    # POSIX fork() creates an exact duplicate of the current process.
+    # Both parent and child continue from this point, but fork() returns:
+    #   - 0 in the child process
+    #   - child's PID in the parent process
+    #   - -1 on error (raises OSError in Python)
+    # Reference: https://pubs.opengroup.org/onlinepubs/9699919799/functions/fork.html
     try:
         pid = os.fork()
     except OSError as e:
@@ -77,9 +89,12 @@ def execute_external_command(args: List[str], config: Dict[str, Any]) -> int:
         signal.signal(signal.SIGINT, signal.SIG_DFL)
 
         # Try to replace process image with the command
+        # POSIX execvp() replaces the current process image with a new one.
+        # It searches PATH for the executable and passes arguments as a vector.
+        # On success, this call NEVER returns (process image is completely replaced).
+        # Only returns (implicitly via exception) if exec fails.
+        # Reference: https://pubs.opengroup.org/onlinepubs/9699919799/functions/exec.html
         try:
-            # execvp() searches PATH for the command and replaces this process
-            # This call never returns on success (process is replaced)
             os.execvp(args[0], args)
         except FileNotFoundError:
             # Command not found in PATH
@@ -114,10 +129,12 @@ def execute_external_command(args: List[str], config: Dict[str, Any]) -> int:
             print(f"[Forked child PID: {pid}]", file=sys.stderr)
 
         # Step 3: Wait for child to complete
+        # POSIX waitpid() suspends execution until the specified child changes state.
+        # With options=0, it waits for termination (not stop/continue).
+        # Returns tuple: (child_pid, status)
+        # status is encoded - use POSIX macros (WIFEXITED, WEXITSTATUS, etc.) to decode.
+        # Reference: https://pubs.opengroup.org/onlinepubs/9699919799/functions/wait.html
         try:
-            # waitpid() blocks until the specific child exits
-            # Returns tuple: (child_pid, status)
-            # status is encoded and needs POSIX macros to extract info
             child_pid, status = os.waitpid(pid, 0)
         except ChildProcessError:
             # This shouldn't happen (child already reaped)
@@ -128,13 +145,19 @@ def execute_external_command(args: List[str], config: Dict[str, Any]) -> int:
         # Step 4: Display exit status if configured
         display_exit_status(status, config)
 
-        # Step 5: Extract and return exit code
+        # Step 5: Extract and return exit code using POSIX status macros
+        # POSIX defines macros to interpret the encoded wait status:
+        # - WIFEXITED(status): True if child exited normally via exit() or return
+        # - WEXITSTATUS(status): Extract exit code (0-255) if WIFEXITED is true
+        # - WIFSIGNALED(status): True if child was terminated by signal
+        # - WTERMSIG(status): Extract signal number if WIFSIGNALED is true
+        # Reference: https://pubs.opengroup.org/onlinepubs/9699919799/functions/wait.html
         if os.WIFEXITED(status):
-            # Process exited normally - extract exit code
+            # Process exited normally - extract exit code (0-255)
             return os.WEXITSTATUS(status)
         elif os.WIFSIGNALED(status):
-            # Process was terminated by signal
-            # Return 128 + signal number (common convention)
+            # Process was terminated by signal (e.g., SIGKILL, SIGTERM, SIGSEGV)
+            # Return 128 + signal number (POSIX convention for signal termination)
             return 128 + os.WTERMSIG(status)
         else:
             # Process was stopped or continued (shouldn't happen with default waitpid)

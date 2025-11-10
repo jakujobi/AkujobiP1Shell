@@ -3,6 +3,10 @@ Built-in commands module.
 
 This module implements shell built-in commands that are executed
 directly by the shell without forking a new process.
+
+POSIX References:
+    - chdir(): https://pubs.opengroup.org/onlinepubs/9699919799/functions/chdir.html
+    - getcwd(): https://pubs.opengroup.org/onlinepubs/9699919799/functions/getcwd.html
 """
 
 import os
@@ -111,6 +115,8 @@ class CdCommand(BuiltinCommand):
             target = args[1]
 
         # Save current directory before changing
+        # POSIX getcwd() returns the absolute pathname of the current working directory.
+        # Reference: https://pubs.opengroup.org/onlinepubs/9699919799/functions/getcwd.html
         try:
             current = os.getcwd()
         except OSError:
@@ -118,6 +124,9 @@ class CdCommand(BuiltinCommand):
             current = None
 
         # Try to change directory
+        # POSIX chdir() changes the current working directory to the specified path.
+        # Returns 0 on success, -1 on error (Python raises exception on error).
+        # Reference: https://pubs.opengroup.org/onlinepubs/9699919799/functions/chdir.html
         try:
             os.chdir(target)
         except FileNotFoundError:
@@ -176,6 +185,8 @@ class PwdCommand(BuiltinCommand):
             /current/working/directory
             0
         """
+        # POSIX getcwd() returns the absolute pathname of the current working directory.
+        # Reference: https://pubs.opengroup.org/onlinepubs/9699919799/functions/getcwd.html
         try:
             print(os.getcwd())
             return 0

@@ -1,0 +1,45 @@
+# Quiet Configuration Example
+# Minimal output, clean and simple
+#
+# Use this when:
+#   - You want a clean terminal
+#   - Running scripts
+#   - Minimal distractions
+#   - Production-like environment
+
+# Simple, unobtrusive prompt
+prompt:
+  text: "> "
+
+# Brief exit message
+exit:
+  message: "bye"
+
+# Never show exit codes (quiet mode)
+execution:
+  show_exit_codes: "never"
+
+# Wildcards enabled but silent
+glob:
+  enabled: true
+  show_expansions: false
+
+# All built-ins enabled, minimal feedback
+builtins:
+  cd:
+    enabled: true
+    show_pwd_after: false   # No pwd output after cd
+  pwd:
+    enabled: true
+  help:
+    enabled: true
+
+# No verbose errors
+errors:
+  verbose: false
+
+# Debug disabled
+debug:
+  log_commands: false
+  show_fork_pids: false
+

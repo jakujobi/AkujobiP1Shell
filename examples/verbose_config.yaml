@@ -1,0 +1,47 @@
+# Verbose Configuration Example
+# Maximum visibility for debugging and development
+#
+# Use this when:
+#   - Debugging shell behavior
+#   - Learning how the shell works
+#   - Troubleshooting issues
+#   - Development and testing
+
+# Detailed prompt with context
+prompt:
+  text: "[AkujobiP1Shell]$ "
+
+# Informative exit message
+exit:
+  message: "Shell session terminated. Goodbye!"
+
+# Always show exit codes
+execution:
+  show_exit_codes: "always"
+  exit_code_format: "[Exit Code: {code}]"
+
+# Wildcards enabled with expansion display
+glob:
+  enabled: true
+  show_expansions: false  # Set to true to see expansions (not implemented yet)
+
+# All built-ins enabled with maximum feedback
+builtins:
+  cd:
+    enabled: true
+    show_pwd_after: true    # Show directory after cd
+  pwd:
+    enabled: true
+  help:
+    enabled: true
+
+# Verbose error messages with tracebacks
+errors:
+  verbose: true
+
+# Debug mode enabled
+debug:
+  log_commands: true
+  log_file: "~/.akujobip1_debug.log"
+  show_fork_pids: true      # Show child process IDs
+
