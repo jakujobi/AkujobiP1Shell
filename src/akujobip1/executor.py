@@ -52,7 +52,11 @@ def execute_external_command(args: List[str], config: Dict[str, Any]) -> int:
         return 1
 
     # Debug output if enabled
-    if config.get('debug', {}).get('show_fork_pids', False):
+    # Handle None values in config (malformed config)
+    debug_config = config.get('debug', {})
+    if debug_config is None:
+        debug_config = {}
+    if debug_config.get('show_fork_pids', False):
         print(f"[About to fork for: {args[0]}]", file=sys.stderr)
 
     # Step 1: Fork the process
@@ -96,7 +100,11 @@ def execute_external_command(args: List[str], config: Dict[str, Any]) -> int:
     else:
         # PARENT PROCESS PATH
         # Debug output showing child PID
-        if config.get('debug', {}).get('show_fork_pids', False):
+        # Handle None values in config (malformed config)
+        debug_config = config.get('debug', {})
+        if debug_config is None:
+            debug_config = {}
+        if debug_config.get('show_fork_pids', False):
             print(f"[Forked child PID: {pid}]", file=sys.stderr)
 
         # Step 3: Wait for child to complete
@@ -161,8 +169,12 @@ def display_exit_status(status: int, config: Dict[str, Any]) -> None:
         [Exit: 1]
     """
     # Get configuration settings with defaults
-    show_mode = config.get('execution', {}).get('show_exit_codes', 'on_failure')
-    format_str = config.get('execution', {}).get('exit_code_format', '[Exit: {code}]')
+    # Handle None values in config (malformed config)
+    execution_config = config.get('execution', {})
+    if execution_config is None:
+        execution_config = {}
+    show_mode = execution_config.get('show_exit_codes', 'on_failure')
+    format_str = execution_config.get('exit_code_format', '[Exit: {code}]')
 
     # Check how the process terminated
     if os.WIFEXITED(status):

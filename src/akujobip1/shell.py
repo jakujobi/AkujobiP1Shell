@@ -181,7 +181,11 @@ def run_shell(config: Dict[str, Any]) -> int:
             print(f"Shell error: {e}", file=sys.stderr)
             
             # If verbose error mode is enabled, show traceback
-            if config.get('errors', {}).get('verbose', False):
+            # Handle None values in config (malformed config)
+            errors_config = config.get('errors', {})
+            if errors_config is None:
+                errors_config = {}
+            if errors_config.get('verbose', False):
                 import traceback
                 traceback.print_exc()
             

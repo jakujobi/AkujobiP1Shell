@@ -495,7 +495,7 @@ class TestConfigurationIntegration:
     def test_config_passed_to_parser(self, mock_input_sequence, default_config):
         """Test that config is passed to parser."""
         with patch('builtins.input', mock_input_sequence('ls *.txt', 'exit')):
-            with patch('akujobip1.shell.parse_command', return_value=['ls', 'file.txt']) as mock_parse:
+            with patch('akujobip1.shell.parse_command', side_effect=[['ls', 'file.txt'], ['exit']]) as mock_parse:
                 with patch('akujobip1.executor.execute_external_command', return_value=0):
                     run_shell(default_config)
         
@@ -585,7 +585,7 @@ class TestBashTestSimulation:
         # Verify arguments parsed correctly
         args = mock_exec.call_args[0][0]
         assert args[0] == 'printf'
-        assert args[1] == '%s %s\n'
+        assert args[1] == r'%s %s\n'  # Raw string - literal backslash-n, not newline
         assert args[2] == 'a b'
         assert args[3] == 'c'
         assert exit_code == 0

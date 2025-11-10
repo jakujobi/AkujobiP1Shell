@@ -53,7 +53,11 @@ class ExitCommand(BuiltinCommand):
             -1
         """
         # Get exit message from config
-        message = config.get('exit', {}).get('message', 'Bye!')
+        # Handle None values in config (malformed config)
+        exit_config = config.get('exit', {})
+        if exit_config is None:
+            exit_config = {}
+        message = exit_config.get('message', 'Bye!')
         print(message)
 
         # Return -1 to signal shell to exit
@@ -135,7 +139,14 @@ class CdCommand(BuiltinCommand):
             CdCommand._previous_directory = current
 
         # Optionally show pwd after cd
-        if config.get('builtins', {}).get('cd', {}).get('show_pwd_after', False):
+        # Handle None values in config (malformed config)
+        builtins_config = config.get('builtins', {})
+        if builtins_config is None:
+            builtins_config = {}
+        cd_config = builtins_config.get('cd', {})
+        if cd_config is None:
+            cd_config = {}
+        if cd_config.get('show_pwd_after', False):
             print(os.getcwd())
 
         return 0

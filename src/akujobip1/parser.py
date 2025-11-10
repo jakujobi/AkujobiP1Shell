@@ -54,7 +54,11 @@ def parse_command(command_line: str, config: Dict[str, Any]) -> List[str]:
         return []
 
     # Expand wildcards if enabled in config
-    if config.get('glob', {}).get('enabled', True):
+    # Handle None values in config (malformed config)
+    glob_config = config.get('glob', {})
+    if glob_config is None:
+        glob_config = {}
+    if glob_config.get('enabled', True):
         args = expand_wildcards(args, config)
 
     return args
@@ -85,7 +89,11 @@ def expand_wildcards(args: List[str], config: Dict[str, Any]) -> List[str]:
         ['cp', 'file1.txt', 'file2.txt', 'dest/']
     """
     # Check if glob expansion is disabled
-    if not config.get('glob', {}).get('enabled', True):
+    # Handle None values in config (malformed config)
+    glob_config = config.get('glob', {})
+    if glob_config is None:
+        glob_config = {}
+    if not glob_config.get('enabled', True):
         return args
 
     expanded_args = []
