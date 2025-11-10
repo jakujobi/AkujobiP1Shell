@@ -1,0 +1,56 @@
+# Custom Configuration Example
+# Personalized setup with custom styling
+#
+# This example shows how to customize the shell
+# to match your preferences and workflow
+
+# Custom prompt with style
+prompt:
+  text: "[MyShell]$ "
+
+# Personalized exit message
+exit:
+  message: "See you later! :)"
+
+# Custom exit code display
+execution:
+  show_exit_codes: "on_failure"
+  exit_code_format: "(exit: {code})"
+
+# Wildcards with custom behavior
+glob:
+  enabled: true
+  show_expansions: false
+
+# Built-in commands configuration
+builtins:
+  cd:
+    enabled: true
+    show_pwd_after: false
+  pwd:
+    enabled: true
+  help:
+    enabled: true
+
+# Standard error handling
+errors:
+  verbose: false
+
+# Custom logging
+debug:
+  log_commands: false
+  log_file: "~/my-shell-logs/akujobip1.log"
+  show_fork_pids: false
+
+# Additional notes:
+# - Supports ~ expansion in paths
+# - Supports $VAR expansion
+# - Deep merges with defaults
+# - Invalid values print warning but don't crash
+
+# Priority order (highest to lowest):
+# 1. $AKUJOBIP1_CONFIG environment variable
+# 2. ./akujobip1.yaml (current directory)
+# 3. ~/.config/akujobip1/config.yaml (user config)
+# 4. Built-in defaults
+

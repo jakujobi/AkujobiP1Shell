@@ -1,0 +1,34 @@
+# Minimal Configuration Example
+# Simple, clean configuration with just the essentials
+#
+# Location options:
+#   - ./akujobip1.yaml (current directory)
+#   - ~/.config/akujobip1/config.yaml (user config)
+#   - $AKUJOBIP1_CONFIG environment variable
+
+# Basic prompt
+prompt:
+  text: "$ "
+
+# Simple exit message
+exit:
+  message: "Goodbye!"
+
+# Show exit codes only on failure (default behavior)
+execution:
+  show_exit_codes: "on_failure"
+
+# Enable wildcards (default)
+glob:
+  enabled: true
+
+# All built-ins enabled (default)
+builtins:
+  cd:
+    enabled: true
+    show_pwd_after: false
+  pwd:
+    enabled: true
+  help:
+    enabled: true
+

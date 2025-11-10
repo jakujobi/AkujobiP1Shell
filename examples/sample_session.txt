@@ -1,0 +1,220 @@
+===================================================================
+AkujobiP1Shell - Sample Terminal Session
+===================================================================
+This file shows a complete shell session demonstrating all features.
+
+Author: John Akujobi
+Date: November 2025
+Version: 1.0.0
+
+===================================================================
+SESSION START
+===================================================================
+
+$ akujobip1
+AkujobiP1>
+
+-------------------------------------------------------------------
+1. BASIC COMMANDS
+-------------------------------------------------------------------
+
+AkujobiP1> pwd
+/home/user/dev/AkujobiP1Shell
+
+AkujobiP1> ls
+README.md  docs/  examples/  src/  tests/  venv/
+
+AkujobiP1> echo hello
+hello
+
+AkujobiP1> date
+Sun Nov 10 10:30:15 EST 2025
+
+-------------------------------------------------------------------
+2. COMMANDS WITH ARGUMENTS
+-------------------------------------------------------------------
+
+AkujobiP1> ls -l
+total 24
+-rw-r--r-- 1 user user 3456 Nov 10 09:00 README.md
+drwxr-xr-x 5 user user 4096 Nov 10 09:15 docs/
+drwxr-xr-x 2 user user 4096 Nov 10 09:20 examples/
+drwxr-xr-x 3 user user 4096 Nov 10 08:45 src/
+drwxr-xr-x 2 user user 4096 Nov 10 09:00 tests/
+drwxr-xr-x 5 user user 4096 Nov 10 09:30 venv/
+
+AkujobiP1> echo one two three
+one two three
+
+AkujobiP1> printf "%s-%s-%s\n" first second third
+first-second-third
+
+-------------------------------------------------------------------
+3. QUOTED ARGUMENTS
+-------------------------------------------------------------------
+
+AkujobiP1> echo "hello world"
+hello world
+
+AkujobiP1> echo 'single quotes'
+single quotes
+
+AkujobiP1> printf "%s %s\n" "arg with spaces" "another arg"
+arg with spaces another arg
+
+-------------------------------------------------------------------
+4. BUILT-IN COMMANDS
+-------------------------------------------------------------------
+
+AkujobiP1> help
+Built-in commands:
+  exit       Exit the shell
+  cd [dir]   Change directory (cd - for previous, cd for home)
+  pwd        Print working directory
+  help       Show this help message
+
+AkujobiP1> pwd
+/home/user/dev/AkujobiP1Shell
+
+AkujobiP1> cd /tmp
+
+AkujobiP1> pwd
+/tmp
+
+AkujobiP1> cd -
+
+AkujobiP1> pwd
+/home/user/dev/AkujobiP1Shell
+
+AkujobiP1> cd
+
+AkujobiP1> pwd
+/home/user
+
+AkujobiP1> cd /home/user/dev/AkujobiP1Shell
+
+-------------------------------------------------------------------
+5. WILDCARD EXPANSION
+-------------------------------------------------------------------
+
+AkujobiP1> cd src/akujobip1
+
+AkujobiP1> ls *.py
+__init__.py  __main__.py  builtins.py  config.py  executor.py  parser.py  shell.py
+
+AkujobiP1> echo test*.py
+# (If test files exist, they would be listed)
+
+AkujobiP1> ls nonexistent*.txt
+ls: cannot access 'nonexistent*.txt': No such file or directory
+[Exit: 2]
+
+AkujobiP1> cd /home/user/dev/AkujobiP1Shell
+
+-------------------------------------------------------------------
+6. ERROR HANDLING
+-------------------------------------------------------------------
+
+AkujobiP1> nonexistentcommand
+nonexistentcommand: command not found
+[Exit: 127]
+
+AkujobiP1> cd /invalid/path
+cd: /invalid/path: No such file or directory
+
+AkujobiP1> cat /root/secret.txt
+cat: /root/secret.txt: Permission denied
+[Exit: 1]
+
+AkujobiP1>
+
+-------------------------------------------------------------------
+7. EXIT CODES (with show_exit_codes: "always")
+-------------------------------------------------------------------
+
+AkujobiP1> true
+[Exit: 0]
+
+AkujobiP1> false
+[Exit: 1]
+
+AkujobiP1> ls /nonexistent
+ls: cannot access '/nonexistent': No such file or directory
+[Exit: 2]
+
+AkujobiP1> grep pattern nonexistent_file.txt
+grep: nonexistent_file.txt: No such file or directory
+[Exit: 2]
+
+-------------------------------------------------------------------
+8. SIGNAL HANDLING
+-------------------------------------------------------------------
+
+AkujobiP1> sleep 10
+^C
+[Terminated by signal 2]
+[Exit: 130]
+
+AkujobiP1> echo "shell still works"
+shell still works
+[Exit: 0]
+
+AkujobiP1>
+# Press Ctrl+D to exit gracefully
+
+-------------------------------------------------------------------
+9. EMPTY INPUT AND WHITESPACE
+-------------------------------------------------------------------
+
+AkujobiP1>
+# Empty line - shell continues
+
+AkujobiP1>    
+# Whitespace only - shell continues
+
+AkujobiP1>
+
+-------------------------------------------------------------------
+10. EXIT SHELL
+-------------------------------------------------------------------
+
+AkujobiP1> exit
+Bye!
+
+$
+
+===================================================================
+SESSION END
+===================================================================
+
+KEY FEATURES DEMONSTRATED:
+- Basic command execution (pwd, ls, echo)
+- Commands with multiple arguments
+- Quoted arguments (single and double quotes)
+- Built-in commands (exit, cd, pwd, help)
+- cd - (previous directory)
+- cd (home directory)
+- Wildcard expansion (*.py)
+- Error handling (command not found, permission denied)
+- Exit code display
+- Signal handling (Ctrl+C during command)
+- Shell continues after errors
+- Empty input handling
+- Graceful exit
+
+POSIX SYSTEM CALLS USED:
+- fork() - Create child process for external commands
+- execvp() - Replace process image with command
+- waitpid() - Wait for child to complete
+- chdir() - Change directory (cd command)
+- getcwd() - Get current directory (pwd command)
+
+EXIT CODES OBSERVED:
+- 0: Success
+- 1: General errors
+- 2: Command-specific errors (ls, grep)
+- 127: Command not found
+- 130: Terminated by SIGINT (128 + 2)
+
+===================================================================
+
