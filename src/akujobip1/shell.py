@@ -20,7 +20,9 @@ def cli() -> int:
         Exit code (0 for success)
     """
     # TODO: Implement main entry point
-    pass
+    print("AkujobiP1Shell - Phase 1 Setup Complete")
+    print("Full implementation coming in Phase 2...")
+    return 0
 
 
 def run_shell(config: dict) -> int:

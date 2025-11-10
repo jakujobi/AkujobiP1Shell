@@ -19,7 +19,7 @@ if [ ! -f "venv/bin/activate" ]; then
     echo ""
 
     # Check if python3-venv is installed
-    echo "[1/6] Checking python3-venv..."
+    echo "[1/7] Checking python3-venv..."
     if ! python3 -m venv --help > /dev/null 2>&1; then
         echo ""
         echo "✗ ERROR: python3-venv is not installed."
@@ -68,14 +68,14 @@ if [ ! -f "venv/bin/activate" ]; then
 
     # Clean up incomplete venv if it exists
     if [ -d "venv" ] && [ ! -f "venv/bin/activate" ]; then
-        echo "[2/6] Cleaning up incomplete virtual environment..."
+        echo "[2/7] Cleaning up incomplete virtual environment..."
         rm -rf venv
         echo "  ✓ Cleaned up"
         echo ""
     fi
 
     # Create virtual environment
-    echo "[2/6] Creating virtual environment..."
+    echo "[2/7] Creating virtual environment..."
     if [ -d "venv" ] && [ -f "venv/bin/activate" ]; then
         echo "  ✓ Virtual environment already exists"
     else
@@ -113,7 +113,7 @@ if [ ! -f "venv/bin/activate" ]; then
     echo ""
 
     # Activate virtual environment
-    echo "[3/6] Activating virtual environment..."
+    echo "[3/7] Activating virtual environment..."
     if [ ! -f "venv/bin/activate" ]; then
         echo "  ✗ ERROR: Cannot activate virtual environment"
         echo "  venv/bin/activate not found"
@@ -124,7 +124,7 @@ if [ ! -f "venv/bin/activate" ]; then
     echo ""
 
     # Upgrade pip (if available)
-    echo "[4/6] Checking pip..."
+    echo "[4/7] Checking pip..."
     if command -v pip >/dev/null 2>&1; then
         echo "  Upgrading pip..."
         pip install --upgrade pip --quiet
@@ -135,15 +135,43 @@ if [ ! -f "venv/bin/activate" ]; then
     echo ""
 
     # Install package in editable mode
-    echo "[5/6] Installing AkujobiP1Shell..."
+    echo "[5/7] Installing AkujobiP1Shell..."
     pip install -e . --quiet
     echo "  ✓ Package installed"
     echo ""
 
     # Install development dependencies
-    echo "[6/6] Installing development dependencies..."
+    echo "[6/7] Installing development dependencies..."
     pip install -e ".[dev]" --quiet
     echo "  ✓ Development dependencies installed"
+    echo ""
+
+    # Test installation
+    echo "[7/7] Testing installation..."
+    if command -v akujobip1 >/dev/null 2>&1; then
+        echo "  ✓ akujobip1 command is available"
+        # Test if the command actually runs and returns 0
+        if akujobip1 >/dev/null 2>&1; then
+            echo "  ✓ akujobip1 command executes successfully"
+        else
+            EXIT_CODE=$?
+            if [ $EXIT_CODE -eq 0 ]; then
+                echo "  ✓ akujobip1 command executes successfully"
+            else
+                echo "  ✗ Warning: akujobip1 command returned exit code $EXIT_CODE"
+            fi
+        fi
+        # Test if Python module import works
+        if python -c "from akujobip1.shell import cli" 2>/dev/null; then
+            echo "  ✓ Python module imports successfully"
+        else
+            echo "  ✗ Warning: Python module import failed"
+        fi
+    else
+        echo "  ✗ ERROR: akujobip1 command not found"
+        echo "  Installation may have failed"
+        exit 1
+    fi
     echo ""
 
     echo "=========================================="
