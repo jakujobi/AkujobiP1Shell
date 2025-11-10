@@ -101,24 +101,24 @@
   - [x] All tests passing
 
 ### 2.4 Process Executor (executor.py)
-- [ ] Implement `execute_external_command(args, config)` function
-  - [ ] Call `os.fork()` with error handling
-  - [ ] Child process:
-    - [ ] Reset signal handlers to default
-    - [ ] Call `os.execvp(args[0], args)`
-    - [ ] Handle `FileNotFoundError` (command not found)
-    - [ ] Handle `PermissionError` (not executable)
-    - [ ] Exit with appropriate code (127, 126)
-  - [ ] Parent process:
-    - [ ] Call `os.waitpid(pid, 0)`
-    - [ ] Extract exit status
-    - [ ] Display exit code if configured
-    - [ ] Handle signals (WIFSIGNALED)
-- [ ] Write unit tests for executor
-  - [ ] Test successful execution
-  - [ ] Test command not found
-  - [ ] Test permission denied
-  - [ ] Test exit code handling
+- [x] Implement `execute_external_command(args, config)` function
+  - [x] Call `os.fork()` with error handling
+  - [x] Child process:
+    - [x] Reset signal handlers to default
+    - [x] Call `os.execvp(args[0], args)`
+    - [x] Handle `FileNotFoundError` (command not found)
+    - [x] Handle `PermissionError` (not executable)
+    - [x] Exit with appropriate code (127, 126)
+  - [x] Parent process:
+    - [x] Call `os.waitpid(pid, 0)`
+    - [x] Extract exit status
+    - [x] Display exit code if configured
+    - [x] Handle signals (WIFSIGNALED)
+- [x] Write unit tests for executor
+  - [x] Test successful execution
+  - [x] Test command not found
+  - [x] Test permission denied
+  - [x] Test exit code handling
 
 ### 2.5 Main Shell Loop (shell.py)
 - [ ] Implement `cli()` function (entry point)
