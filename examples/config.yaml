@@ -1,0 +1,48 @@
+# AkujobiP1Shell Example Configuration
+# This is an example configuration file showing all available options
+
+prompt:
+  # Customize the shell prompt
+  text: "AkujobiP1> "
+
+exit:
+  # Message displayed when exiting the shell
+  message: "Bye!"
+
+execution:
+  # When to show exit codes: never, on_failure, always
+  show_exit_codes: "on_failure"
+  # Format string for exit code display (use {code} placeholder)
+  exit_code_format: "[Exit: {code}]"
+
+glob:
+  # Enable wildcard expansion (e.g., *.py)
+  enabled: true
+  # Show expanded wildcards before execution
+  show_expansions: false
+
+builtins:
+  cd:
+    # Enable cd command
+    enabled: true
+    # Show current directory after cd
+    show_pwd_after: false
+  pwd:
+    # Enable pwd command
+    enabled: true
+  help:
+    # Enable help command
+    enabled: true
+
+errors:
+  # Show verbose error messages
+  verbose: false
+
+debug:
+  # Log all commands to file
+  log_commands: false
+  # Path to log file (tilde expansion supported)
+  log_file: "~/.akujobip1.log"
+  # Show fork/exec process IDs
+  show_fork_pids: false
+

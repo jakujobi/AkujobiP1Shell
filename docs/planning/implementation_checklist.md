@@ -9,22 +9,22 @@
 ## Phase 1: Project Setup and Core Structure
 
 ### 1.1 Directory Structure
-- [ ] Create `src/akujobip1/` directory
-- [ ] Create `src/akujobip1/__init__.py`
-- [ ] Create `src/akujobip1/shell.py` (main shell logic)
-- [ ] Create `src/akujobip1/config.py` (configuration management)
-- [ ] Create `src/akujobip1/builtins.py` (built-in commands)
-- [ ] Create `src/akujobip1/executor.py` (process execution)
-- [ ] Create `src/akujobip1/parser.py` (command parsing)
+- [x] Create `src/akujobip1/` directory
+- [x] Create `src/akujobip1/__init__.py`
+- [x] Create `src/akujobip1/shell.py` (main shell logic)
+- [x] Create `src/akujobip1/config.py` (configuration management)
+- [x] Create `src/akujobip1/builtins.py` (built-in commands)
+- [x] Create `src/akujobip1/executor.py` (process execution)
+- [x] Create `src/akujobip1/parser.py` (command parsing)
 
 ### 1.2 Configuration Files
-- [ ] Create default `akujobip1.yaml` configuration file
-- [ ] Create example configuration in `examples/config.yaml`
-- [ ] Update `.gitignore` for Python artifacts
+- [x] Create default `akujobip1.yaml` configuration file
+- [x] Create example configuration in `examples/config.yaml`
+- [x] Update `.gitignore` for Python artifacts
 
 ### 1.3 Dependencies
-- [ ] Verify `pyproject.toml` dependencies
-- [ ] Generate `requirements.txt` from pyproject.toml
+- [x] Verify `pyproject.toml` dependencies
+- [x] Generate `requirements.txt` from pyproject.toml
 - [ ] Test `pip install -e .` installation
 
 ---

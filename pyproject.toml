@@ -10,6 +10,9 @@ description = "CSC456 Process Management Shell (POSIX syscalls in Python)"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [{ name = "John Akujobi" }]
+dependencies = [
+    "PyYAML>=6.0",
+]
 
 [project.scripts]
 # `akujobip1` will start the shell

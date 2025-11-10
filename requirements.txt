@@ -1,0 +1,6 @@
+# Requirements for AkujobiP1Shell
+# Generated from pyproject.toml
+# Install with: pip install -r requirements.txt
+
+PyYAML>=6.0
+
