@@ -140,7 +140,7 @@ See `examples/config.yaml` for all available options.
 If you see this error when running `pip install -e .`, you need to use a virtual environment. Use the setup script:
 
 ```bash
-./setup.sh
+./activate.sh
 ```
 
 ### "python3-venv not found" or "ensurepip is not available"
