@@ -141,14 +141,14 @@ def validate_config(config: Dict[str, Any]) -> bool:
     - Enum values are valid
     - Types are correct
 
-    Prints warnings for invalid values but always returns True
-    (we use defaults for invalid values rather than failing).
+    Prints warnings for invalid values but doesn't fail - the shell
+    will use default values for any missing or invalid settings.
 
     Args:
         config: Configuration to validate
 
     Returns:
-        True (always, but prints warnings for issues)
+        True if valid, False if any warnings were printed
     """
     valid = True
 
@@ -266,7 +266,7 @@ def load_config() -> Dict[str, Any]:
         if env_data := load_yaml_file(env_config_file):
             config = merge_config(config, env_data)
         elif env_config_file.exists():
-            print(f"Warning: Could not load config from $AKUJOBIP1_CONFIG: {env_config_path}", file=sys.stderr)
+            print(f"Warning: Invalid or unreadable config file at $AKUJOBIP1_CONFIG: {env_config_path}", file=sys.stderr)
 
     # Expand paths (~ and environment variables)
     config = expand_paths(config)
