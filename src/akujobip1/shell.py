@@ -36,7 +36,7 @@ def run_shell(config: dict) -> int:
         Exit code
     """
     # TODO: Implement REPL loop
-    pass
+    raise NotImplementedError
 
 
 def setup_signal_handlers() -> None:
@@ -44,7 +44,7 @@ def setup_signal_handlers() -> None:
     Set up signal handlers for SIGINT (Ctrl+C).
     """
     # TODO: Implement signal handler setup
-    pass
+    raise NotImplementedError
 
 
 def sigint_handler(signum: int, frame) -> None:
@@ -56,5 +56,5 @@ def sigint_handler(signum: int, frame) -> None:
         frame: Current stack frame
     """
     # TODO: Implement SIGINT handler
-    pass
+    raise NotImplementedError
 

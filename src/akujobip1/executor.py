@@ -29,7 +29,7 @@ def execute_external_command(args: List[str], config: Dict[str, Any]) -> int:
         Exit code of command
     """
     # TODO: Implement fork/exec/wait logic
-    pass
+    raise NotImplementedError
 
 
 def display_exit_status(status: int, config: Dict[str, Any]) -> None:
@@ -41,5 +41,5 @@ def display_exit_status(status: int, config: Dict[str, Any]) -> None:
         config: Configuration dictionary
     """
     # TODO: Implement exit status display logic
-    pass
+    raise NotImplementedError
 

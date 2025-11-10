@@ -32,7 +32,7 @@ class ExitCommand(BuiltinCommand):
 
     def execute(self, args: List[str], config: Dict[str, Any]) -> int:
         # TODO: Implement exit command
-        pass
+        raise NotImplementedError
 
 
 class CdCommand(BuiltinCommand):
@@ -40,7 +40,7 @@ class CdCommand(BuiltinCommand):
 
     def execute(self, args: List[str], config: Dict[str, Any]) -> int:
         # TODO: Implement cd command
-        pass
+        raise NotImplementedError
 
 
 class PwdCommand(BuiltinCommand):
@@ -48,7 +48,7 @@ class PwdCommand(BuiltinCommand):
 
     def execute(self, args: List[str], config: Dict[str, Any]) -> int:
         # TODO: Implement pwd command
-        pass
+        raise NotImplementedError
 
 
 class HelpCommand(BuiltinCommand):
@@ -56,7 +56,7 @@ class HelpCommand(BuiltinCommand):
 
     def execute(self, args: List[str], config: Dict[str, Any]) -> int:
         # TODO: Implement help command
-        pass
+        raise NotImplementedError
 
 
 # Built-in command registry

@@ -25,7 +25,7 @@ def load_config() -> Dict[str, Any]:
         Configuration dictionary
     """
     # TODO: Implement config loading
-    pass
+    raise NotImplementedError
 
 
 def merge_config(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, Any]:
@@ -40,7 +40,7 @@ def merge_config(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, An
         Merged configuration
     """
     # TODO: Implement deep merge
-    pass
+    raise NotImplementedError
 
 
 def validate_config(config: Dict[str, Any]) -> bool:
@@ -54,7 +54,7 @@ def validate_config(config: Dict[str, Any]) -> bool:
         True if valid, False otherwise
     """
     # TODO: Implement config validation
-    pass
+    raise NotImplementedError
 
 
 def get_default_config() -> Dict[str, Any]:
@@ -65,7 +65,7 @@ def get_default_config() -> Dict[str, Any]:
         Default configuration dictionary
     """
     # TODO: Implement default config
-    pass
+    raise NotImplementedError
 
 
 def expand_paths(config: Dict[str, Any]) -> Dict[str, Any]:
@@ -79,5 +79,5 @@ def expand_paths(config: Dict[str, Any]) -> Dict[str, Any]:
         Configuration with expanded paths
     """
     # TODO: Implement path expansion
-    pass
+    raise NotImplementedError
 

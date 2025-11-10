@@ -23,7 +23,7 @@ def parse_command(command_line: str) -> List[str]:
         List of parsed arguments (empty list if input is empty/whitespace)
     """
     # TODO: Implement command parsing
-    pass
+    raise NotImplementedError
 
 
 def expand_wildcards(args: List[str]) -> List[str]:
@@ -37,5 +37,5 @@ def expand_wildcards(args: List[str]) -> List[str]:
         List of arguments with wildcards expanded
     """
     # TODO: Implement wildcard expansion
-    pass
+    raise NotImplementedError
 

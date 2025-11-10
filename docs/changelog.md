@@ -1,6 +1,58 @@
 # Changelog
 
-## [0.1.0] - 2025-11-10
+## [0.1.1] - 2025-11-10
+
+### Phase 1.4: Code Quality and Consistency Fixes - COMPLETED
+
+#### Version Consistency
+- Updated version number to 0.1.1 across all files
+- Fixed `src/akujobip1/__init__.py` to match pyproject.toml version
+- Ensures consistent versioning during packaging and deployment
+
+#### Installation Script Improvements
+- Fixed duplicate step counter [2/7] in `activate.sh`
+- Removed step number from conditional cleanup step for clarity
+- Fixed unreachable code in installation test logic (line 158)
+- Simplified exit code handling in test validation
+- Step counter now sequential: [1/7] through [7/7]
+
+#### Type Contract Fixes
+Fixed type contract violations across all modules where placeholder functions returned None instead of declared types:
+
+**builtins.py**
+- Fixed `ExitCommand.execute()` to raise NotImplementedError
+- Fixed `CdCommand.execute()` to raise NotImplementedError
+- Fixed `PwdCommand.execute()` to raise NotImplementedError
+- Fixed `HelpCommand.execute()` to raise NotImplementedError
+
+**config.py**
+- Fixed `load_config()` to raise NotImplementedError
+- Fixed `merge_config()` to raise NotImplementedError
+- Fixed `validate_config()` to raise NotImplementedError
+- Fixed `get_default_config()` to raise NotImplementedError
+- Fixed `expand_paths()` to raise NotImplementedError
+
+**executor.py**
+- Fixed `execute_external_command()` to raise NotImplementedError
+- Fixed `display_exit_status()` to raise NotImplementedError
+
+**parser.py**
+- Fixed `parse_command()` to raise NotImplementedError
+- Fixed `expand_wildcards()` to raise NotImplementedError
+
+**shell.py**
+- Fixed `run_shell()` to raise NotImplementedError
+- Fixed `setup_signal_handlers()` to raise NotImplementedError
+- Fixed `sigint_handler()` to raise NotImplementedError
+
+#### Benefits
+- All type hints now correctly represent function behavior
+- Static analysis tools will no longer flag these violations
+- Clear indication that functions are placeholder stubs
+- Consistent with Phase 1 installation review fixes
+- Prevents unexpected None returns during integration
+
+---
 
 ### Phase 1.3: Installation Testing and Fixes - COMPLETED
 

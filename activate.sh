@@ -68,7 +68,7 @@ if [ ! -f "venv/bin/activate" ]; then
 
     # Clean up incomplete venv if it exists
     if [ -d "venv" ] && [ ! -f "venv/bin/activate" ]; then
-        echo "[2/7] Cleaning up incomplete virtual environment..."
+        echo "Cleaning up incomplete virtual environment..."
         rm -rf venv
         echo "  ✓ Cleaned up"
         echo ""
@@ -155,11 +155,7 @@ if [ ! -f "venv/bin/activate" ]; then
             echo "  ✓ akujobip1 command executes successfully"
         else
             EXIT_CODE=$?
-            if [ $EXIT_CODE -eq 0 ]; then
-                echo "  ✓ akujobip1 command executes successfully"
-            else
-                echo "  ✗ Warning: akujobip1 command returned exit code $EXIT_CODE"
-            fi
+            echo "  ✗ Warning: akujobip1 command returned exit code $EXIT_CODE"
         fi
         # Test if Python module import works
         if python -c "from akujobip1.shell import cli" 2>/dev/null; then
