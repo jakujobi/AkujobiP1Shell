@@ -1,5 +1,218 @@
 # Changelog
 
+## [0.8.0] - 2025-11-10
+
+### Phase 5: CI/CD Pipeline - COMPLETE
+
+#### Overview
+Set up comprehensive CI/CD pipeline using GitHub Actions to automate testing, linting, code quality checks, and package building. The pipeline runs on every push and pull request, ensuring code quality and catching issues early.
+
+#### CI/CD Configuration
+
+**Workflow File:** `.github/workflows/ci.yml`
+
+**Trigger Events:**
+- Push to `main`, `master`, or `develop` branches
+- Pull requests to `main`, `master`, or `develop` branches
+- Manual trigger via `workflow_dispatch`
+
+#### Jobs Implemented
+
+**1. Test Job** - Multi-Python Version Testing
+- Runs on: Python 3.10, 3.11, 3.12
+- Steps:
+  - Checkout code
+  - Set up Python with caching
+  - Install dependencies
+  - Verify installation
+  - Run pytest with coverage
+  - Run bash integration tests
+  - Upload coverage to Codecov (Python 3.10 only)
+  - Verify test count (minimum 225 tests)
+- Duration: ~2-3 minutes per Python version
+
+**2. Lint Job** - Code Quality Checks
+- Runs on: Python 3.10
+- Steps:
+  - Run ruff linter on `src/` and `tests/`
+  - Check code formatting with black
+  - Check for debug prints and hardcoded paths
+- Duration: ~1 minute
+
+**3. Package Job** - Build Verification
+- Runs on: Python 3.10
+- Steps:
+  - Build Python package (wheel and sdist)
+  - Check package with twine
+  - Test installation from wheel
+  - Verify command works
+- Duration: ~1 minute
+
+**4. Summary Job** - Result Aggregation
+- Depends on: Test, Lint, Package jobs
+- Reports overall success/failure status
+
+#### Code Quality Improvements
+
+**Fixed Linting Issues:**
+- Removed 13 unused imports from test files ✅
+- Fixed 1 unused variable assignment ✅
+- Updated hardcoded path in docstring example ✅
+- All checks now pass with zero errors ✅
+
+**Formatted Test Files:**
+- Formatted 6 test files with black ✅
+- All 13 Python files now properly formatted ✅
+- Consistent PEP 8 style throughout codebase ✅
+
+**Updated .gitignore:**
+- Added build artifacts (`build/`, `dist/`, `*.egg-info/`)
+- Added test artifacts (`.pytest_cache/`, `.coverage`, `htmlcov/`)
+- Added IDE files (`.vscode/`, `.idea/`)
+- Clean repository structure ✅
+
+#### README Enhancements
+
+**Added Status Badges:**
+- CI workflow status badge
+- Python version badge (3.10+)
+- Tests passing badge (229 tests)
+- Coverage badge (89%)
+
+These badges provide instant visibility into project health.
+
+#### Local CI Testing
+
+All CI checks verified locally before committing:
+
+```bash
+# Tests: 229/229 passing ✅
+pytest -v
+
+# Bash tests: 4/4 passing ✅
+bash tests/run_tests.sh
+
+# Linting: 0 errors ✅
+ruff check src/ tests/
+
+# Formatting: All files formatted ✅
+black --check src/ tests/
+
+# Package build: Success ✅
+python -m build
+twine check dist/*
+
+# No hardcoded paths ✅
+grep -r "/home/\|/Users/" src/
+```
+
+#### Benefits Delivered
+
+1. **Automated Testing:** Every push triggers full test suite
+2. **Multi-Python Support:** Verified on Python 3.10, 3.11, 3.12
+3. **Code Quality:** Automatic linting and formatting checks
+4. **Build Verification:** Ensures package can be built and installed
+5. **Early Issue Detection:** Catches problems before merge
+6. **Professional Polish:** Demonstrates best practices
+7. **Continuous Integration:** Maintains code quality over time
+
+#### Files Created/Modified
+
+**Created:**
+- `.github/workflows/ci.yml` (160 lines) - Main CI configuration
+- `.github/workflows/README.md` (126 lines) - CI documentation
+- Updated `.gitignore` - Build and test artifact exclusions
+
+**Modified:**
+- `README.md` - Added status badges
+- `src/akujobip1/builtins.py` - Fixed hardcoded path in docstring
+- `tests/test_builtins.py` - Removed 2 unused imports
+- `tests/test_config.py` - Removed 2 unused imports
+- `tests/test_executor.py` - Removed 4 unused imports, fixed unused variable
+- `tests/test_shell.py` - Removed 4 unused imports
+- `tests/test_main.py` - Formatted with black
+- `tests/test_parser.py` - Formatted with black
+- All test files - Formatted with black
+
+#### Quality Metrics
+
+✅ **Linting:** 0 errors (ruff)  
+✅ **Formatting:** 100% compliant (black)  
+✅ **Tests:** 229/229 passing  
+✅ **Bash Tests:** 4/4 passing  
+✅ **Package Build:** Successful  
+✅ **Coverage:** 89%  
+✅ **Multi-Python:** Works on 3.10, 3.11, 3.12
+
+#### CI Workflow Features
+
+**Optimization:**
+- Pip cache for faster installations
+- Parallel job execution
+- Conditional codecov upload (Python 3.10 only)
+
+**Reliability:**
+- Matrix testing across Python versions
+- Independent job failure isolation
+- Summary job for aggregate results
+
+**Maintainability:**
+- Clear job names and descriptions
+- Comprehensive step documentation
+- Easy to add new checks
+
+#### Testing Strategy
+
+**Unit Tests (229 tests):**
+- Run on all Python versions
+- Coverage reported for Python 3.10
+- Fast execution (<2 seconds locally)
+
+**Integration Tests (4 bash tests):**
+- Verify real-world shell behavior
+- Test complete workflows
+- Confirm expected output format
+
+**Package Tests:**
+- Build verification
+- Installation test
+- Command availability check
+
+#### Documentation
+
+**CI Documentation Created:**
+- Workflow overview
+- Job descriptions
+- Local testing commands
+- Troubleshooting guide
+- Maintenance instructions
+
+#### Known Limitations
+
+**Coverage Upload:**
+- Requires Codecov account (optional)
+- Can be disabled without affecting workflow
+- Current config doesn't fail CI if Codecov unavailable
+
+**Platform Support:**
+- CI runs on Ubuntu only
+- Windows/macOS support not tested in CI
+- Manual testing required for other platforms
+
+#### Next Steps
+
+Phase 5 is now **COMPLETE**. Ready to proceed to:
+- **Phase 6:** Documentation (diagrams, report, screenshots)
+- **Phase 7:** Final Polish
+- **Phase 8:** Submission Preparation
+
+#### Version Update
+
+- Updated version from 0.7.0 to 0.8.0
+- Reflects CI/CD pipeline completion
+
+---
+
 ## [0.7.0] - 2025-11-10
 
 ### Phase 4: Testing Complete - ALL TESTS PASSING

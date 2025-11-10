@@ -173,7 +173,7 @@ class PwdCommand(BuiltinCommand):
         Example:
             >>> cmd = PwdCommand()
             >>> cmd.execute(['pwd'], {})
-            /home/user
+            /current/working/directory
             0
         """
         try:

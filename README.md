@@ -1,5 +1,10 @@
 # AkujobiP1Shell
 
+![CI](https://github.com/jakujobi/AkujobiP1Shell/workflows/CI/badge.svg)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
+![Tests](https://img.shields.io/badge/tests-229%20passing-success)
+![Coverage](https://img.shields.io/badge/coverage-89%25-yellowgreen)
+
 A simple shell implementation using POSIX system calls for CSC456 Programming Assignment 1.
 
 **Author:** John Akujobi  
