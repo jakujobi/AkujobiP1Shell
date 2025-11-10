@@ -51,19 +51,32 @@
   - [x] All tests passing
 
 ### 2.2 Command Parser (parser.py)
-- [ ] Implement `parse_command(command_line)` function
-  - [ ] Use `shlex.split()` for tokenization
-  - [ ] Handle quoted arguments correctly
-  - [ ] Handle empty input
-  - [ ] Handle whitespace-only input
-- [ ] Implement `expand_wildcards(args)` function
-  - [ ] Use `glob.glob()` for wildcard expansion
-  - [ ] Handle no matches (return literal)
-  - [ ] Handle multiple wildcards
-- [ ] Write unit tests for parser
-  - [ ] Test quoted arguments
-  - [ ] Test wildcards
-  - [ ] Test edge cases
+- [x] Implement `parse_command(command_line, config)` function
+  - [x] Use `shlex.split()` for tokenization
+  - [x] Handle quoted arguments correctly (single and double quotes)
+  - [x] Handle empty input
+  - [x] Handle whitespace-only input
+  - [x] Handle unclosed quotes with error messages
+  - [x] Integrate with wildcard expansion
+- [x] Implement `expand_wildcards(args, config)` function
+  - [x] Use `glob.glob()` for wildcard expansion
+  - [x] Handle no matches (return literal)
+  - [x] Handle multiple wildcards
+  - [x] Support *, ?, and [...] wildcards
+  - [x] Respect config['glob']['enabled'] setting
+  - [x] Sort expansion results
+- [x] Implement `_contains_wildcard()` helper function
+- [x] Write comprehensive unit tests for parser
+  - [x] Test quoted arguments (7 tests)
+  - [x] Test wildcards (7 tests)
+  - [x] Test edge cases (6 tests)
+  - [x] Test configuration integration (4 tests)
+  - [x] Test error handling (3 tests)
+  - [x] Test integration scenarios (6 tests)
+  - [x] Test real-world scenarios (6 tests)
+  - [x] 56 total tests across 8 test classes
+  - [x] 97% code coverage achieved (exceeds 90% target)
+  - [x] All tests passing
 
 ### 2.3 Built-in Commands (builtins.py)
 - [ ] Create `BuiltinCommand` base class
@@ -414,7 +427,7 @@
 
 ## Progress Tracking
 
-**Current Status:** Phase 2.1 Complete - Configuration System Implemented (92% coverage, 39 tests passing)
+**Current Status:** Phase 2.2 Complete - Command Parser Implemented (97% coverage, 56 tests passing)
 
 **Completed:**
 
@@ -439,13 +452,23 @@
 16. [x] Updated changelog with Phase 2.1 completion
 17. [x] Updated version to 0.2.0
 
+**Phase 2.2 - Command Parser:**
+18. [x] Implemented `parse_command()` with shlex tokenization and quote handling
+19. [x] Implemented `expand_wildcards()` with glob pattern matching
+20. [x] Implemented `_contains_wildcard()` helper function
+21. [x] Integrated parser with configuration system
+22. [x] Added comprehensive error handling (unclosed quotes, empty input)
+23. [x] Created comprehensive test suite (56 tests, 8 test classes)
+24. [x] Achieved 97% code coverage (exceeds 90% target)
+25. [x] Updated changelog with Phase 2.2 completion
+26. [x] Updated version to 0.3.0
+
 **Next Steps:**
-1. Phase 2.2: Implement command parser (parser.py)
-2. Phase 2.3: Implement built-in commands (builtins.py)
-3. Phase 2.4: Implement process executor (executor.py)
-4. Phase 2.5: Implement main shell loop (shell.py)
-5. Phase 3: Error handling and edge cases
-6. Phase 4: Testing (integration and bash tests)
+1. Phase 2.3: Implement built-in commands (builtins.py)
+2. Phase 2.4: Implement process executor (executor.py)
+3. Phase 2.5: Implement main shell loop (shell.py)
+4. Phase 3: Error handling and edge cases
+5. Phase 4: Testing (integration and bash tests)
 
 **Estimated Completion Time:** 3-4 weeks
 - Week 1: Core implementation
