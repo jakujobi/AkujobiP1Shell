@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 # Keep the project name as requested for the course; package stays lowercase.
 name = "AkujobiP1"
-version = "0.6.0"
+version = "0.6.1"
 description = "CSC456 Process Management Shell (POSIX syscalls in Python)"
 readme = "README.md"
 requires-python = ">=3.10"
