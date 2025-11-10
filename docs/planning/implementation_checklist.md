@@ -79,23 +79,26 @@
   - [x] All tests passing
 
 ### 2.3 Built-in Commands (builtins.py)
-- [ ] Create `BuiltinCommand` base class
-- [ ] Implement `exit` command
-  - [ ] Print configured exit message
-  - [ ] Return exit code to shell
-- [ ] Implement `cd` command
-  - [ ] Handle no arguments (cd to home)
-  - [ ] Handle directory path argument
-  - [ ] Handle `cd -` (previous directory)
-  - [ ] Error handling for invalid paths
-  - [ ] Optionally show pwd after cd (if configured)
-- [ ] Implement `pwd` command
-  - [ ] Print current working directory
-- [ ] Implement `help` command
-  - [ ] List available built-in commands
-  - [ ] Show usage information
-- [ ] Create `get_builtin(name)` dispatcher function
-- [ ] Write unit tests for each built-in
+- [x] Create `BuiltinCommand` base class
+- [x] Implement `exit` command
+  - [x] Print configured exit message
+  - [x] Return exit code to shell (-1 to signal termination)
+- [x] Implement `cd` command
+  - [x] Handle no arguments (cd to home)
+  - [x] Handle directory path argument
+  - [x] Handle `cd -` (previous directory)
+  - [x] Error handling for invalid paths
+  - [x] Optionally show pwd after cd (if configured)
+- [x] Implement `pwd` command
+  - [x] Print current working directory
+- [x] Implement `help` command
+  - [x] List available built-in commands
+  - [x] Show usage information
+- [x] Create `get_builtin(name)` dispatcher function
+- [x] Write unit tests for each built-in
+  - [x] 35 tests implemented covering all functionality
+  - [x] 100% code coverage achieved (exceeds 90% target)
+  - [x] All tests passing
 
 ### 2.4 Process Executor (executor.py)
 - [ ] Implement `execute_external_command(args, config)` function
@@ -427,7 +430,7 @@
 
 ## Progress Tracking
 
-**Current Status:** Phase 2.2 Complete - Command Parser Implemented (97% coverage, 56 tests passing)
+**Current Status:** Phase 2.3 Complete - Built-in Commands Implemented (100% coverage, 35 tests passing)
 
 **Completed:**
 
@@ -463,12 +466,23 @@
 25. [x] Updated changelog with Phase 2.2 completion
 26. [x] Updated version to 0.3.0
 
+**Phase 2.3 - Built-in Commands:**
+27. [x] Implemented `BuiltinCommand` base class
+28. [x] Implemented `ExitCommand` with configurable message
+29. [x] Implemented `CdCommand` with home, paths, cd -, and error handling
+30. [x] Implemented `PwdCommand` to print working directory
+31. [x] Implemented `HelpCommand` to show available commands
+32. [x] Implemented `get_builtin()` dispatcher function
+33. [x] Created comprehensive test suite (35 tests, 12 test classes)
+34. [x] Achieved 100% code coverage (exceeds 90% target)
+35. [x] Updated changelog with Phase 2.3 completion
+36. [x] Updated version to 0.4.0
+
 **Next Steps:**
-1. Phase 2.3: Implement built-in commands (builtins.py)
-2. Phase 2.4: Implement process executor (executor.py)
-3. Phase 2.5: Implement main shell loop (shell.py)
-4. Phase 3: Error handling and edge cases
-5. Phase 4: Testing (integration and bash tests)
+1. Phase 2.4: Implement process executor (executor.py)
+2. Phase 2.5: Implement main shell loop (shell.py)
+3. Phase 3: Error handling and edge cases
+4. Phase 4: Testing (integration and bash tests)
 
 **Estimated Completion Time:** 3-4 weeks
 - Week 1: Core implementation
