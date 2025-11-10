@@ -4,31 +4,31 @@ This diagram shows the high-level architecture of AkujobiP1Shell and how the mod
 
 ```mermaid
 graph TB
-    User[User/Terminal] --> Shell[shell.py<br/>Main REPL Loop]
+    User["User/Terminal"] --> Shell["shell.py<br/>Main REPL Loop"]
     
-    Shell --> Config[config.py<br/>Configuration<br/>Management]
-    Shell --> Parser[parser.py<br/>Command<br/>Parser]
-    Shell --> Builtins[builtins.py<br/>Built-in<br/>Commands]
-    Shell --> Executor[executor.py<br/>External<br/>Executor]
+    Shell --> Config["config.py<br/>Configuration Management"]
+    Shell --> Parser["parser.py<br/>Command Parser"]
+    Shell --> Builtins["builtins.py<br/>Built-in Commands"]
+    Shell --> Executor["executor.py<br/>External Executor"]
     
-    Config --> |Load YAML| Files[Config Files<br/>~/.config/akujobip1/config.yaml<br/>./akujobip1.yaml<br/>$AKUJOBIP1_CONFIG]
+    Config -->|"Load YAML"| Files["Config Files<br/>config.yaml"]
     
-    Parser --> |shlex.split| Tokenize[Tokenization]
-    Parser --> |glob.glob| Wildcards[Wildcard<br/>Expansion]
+    Parser -->|"shlex.split"| Tokenize["Tokenization"]
+    Parser -->|"glob.glob"| Wildcards["Wildcard Expansion"]
     
-    Builtins --> |os.chdir| CD[cd Command<br/>POSIX chdir]
-    Builtins --> |os.getcwd| PWD[pwd Command<br/>POSIX getcwd]
-    Builtins --> Exit[exit Command]
-    Builtins --> Help[help Command]
+    Builtins -->|"os.chdir"| CD["cd Command"]
+    Builtins -->|"os.getcwd"| PWD["pwd Command"]
+    Builtins --> Exit["exit Command"]
+    Builtins --> Help["help Command"]
     
-    Executor --> |os.fork| Fork[Fork Process<br/>POSIX fork]
-    Executor --> |os.execvp| Exec[Execute Command<br/>POSIX execvp]
-    Executor --> |os.waitpid| Wait[Wait for Child<br/>POSIX waitpid]
+    Executor -->|"os.fork"| Fork["Fork Process"]
+    Executor -->|"os.execvp"| Exec["Execute Command"]
+    Executor -->|"os.waitpid"| Wait["Wait for Child"]
     
-    Fork --> Child[Child Process]
+    Fork --> Child["Child Process"]
     Child --> Exec
-    Exec --> Program[External Program<br/>ls, echo, etc.]
-    Wait --> Status[Exit Status<br/>WIFEXITED<br/>WEXITSTATUS]
+    Exec --> Program["External Program"]
+    Wait --> Status["Exit Status"]
     
     style Shell fill:#e1f5ff
     style Config fill:#fff3e0

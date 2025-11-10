@@ -4,77 +4,77 @@ This diagram shows the flow of data and control through the shell from user inpu
 
 ```mermaid
 flowchart TD
-    Start([User Starts Shell]) --> LoadConfig[Load Configuration<br/>config.py]
-    LoadConfig --> ShowPrompt[Display Prompt<br/>AkujobiP1> ]
+    Start(["User Starts Shell"]) --> LoadConfig["Load Configuration<br/>config.py"]
+    LoadConfig --> ShowPrompt["Display Prompt<br/>AkujobiP1>"]
     
-    ShowPrompt --> ReadInput[Read User Input<br/>input()]
+    ShowPrompt --> ReadInput["Read User Input<br/>input()"]
     
-    ReadInput --> CheckEmpty{Input<br/>Empty?}
-    CheckEmpty -->|Yes| ShowPrompt
-    CheckEmpty -->|No| ParseCommand[Parse Command<br/>parser.py]
+    ReadInput --> CheckEmpty{"Input<br/>Empty?"}
+    CheckEmpty -->|"Yes"| ShowPrompt
+    CheckEmpty -->|"No"| ParseCommand["Parse Command<br/>parser.py"]
     
-    ParseCommand --> Tokenize[Tokenize with shlex<br/>Handle quotes]
-    Tokenize --> CheckWildcard{Wildcards<br/>Enabled?}
+    ParseCommand --> Tokenize["Tokenize with shlex<br/>Handle quotes"]
+    Tokenize --> CheckWildcard{"Wildcards<br/>Enabled?"}
     
-    CheckWildcard -->|Yes| ExpandGlob[Expand Wildcards<br/>glob.glob]
-    CheckWildcard -->|No| CheckArgs
-    ExpandGlob --> CheckArgs{Args<br/>Valid?}
+    CheckWildcard -->|"Yes"| ExpandGlob["Expand Wildcards<br/>glob.glob"]
+    CheckWildcard -->|"No"| CheckArgs
+    ExpandGlob --> CheckArgs{"Args<br/>Valid?"}
     
-    CheckArgs -->|No| ShowError1[Print Parse Error]
+    CheckArgs -->|"No"| ShowError1["Print Parse Error"]
     ShowError1 --> ShowPrompt
-    CheckArgs -->|Yes| CheckBuiltin{Is<br/>Built-in?}
+    CheckArgs -->|"Yes"| CheckBuiltin{"Is<br/>Built-in?"}
     
-    CheckBuiltin -->|Yes| ExecuteBuiltin[Execute Built-in<br/>builtins.py]
-    CheckBuiltin -->|No| ExecuteExternal[Execute External<br/>executor.py]
+    CheckBuiltin -->|"Yes"| ExecuteBuiltin["Execute Built-in<br/>builtins.py"]
+    CheckBuiltin -->|"No"| ExecuteExternal["Execute External<br/>executor.py"]
     
-    ExecuteBuiltin --> CheckExit{Exit<br/>Code = -1?}
-    CheckExit -->|Yes| ExitShell[Print Exit Message<br/>Terminate Shell]
-    CheckExit -->|No| ShowPrompt
+    ExecuteBuiltin --> CheckExit{"Exit<br/>Code = -1?"}
+    CheckExit -->|"Yes"| ExitShell["Print Exit Message<br/>Terminate Shell"]
+    CheckExit -->|"No"| ShowPrompt
     
-    ExecuteExternal --> Fork[Fork Process<br/>os.fork]
-    Fork --> ForkDecision{Parent<br/>or Child?}
+    ExecuteExternal --> Fork["Fork Process<br/>os.fork"]
+    Fork --> ForkDecision{"Parent<br/>or Child?"}
     
-    ForkDecision -->|Child| ResetSignals[Reset Signal Handlers<br/>signal.SIG_DFL]
-    ResetSignals --> Execvp[Execute Command<br/>os.execvp]
-    Execvp --> ExecSuccess{Exec<br/>Success?}
+    ForkDecision -->|"Child"| ResetSignals["Reset Signal Handlers<br/>signal.SIG_DFL"]
+    ResetSignals --> Execvp["Execute Command<br/>os.execvp"]
+    Execvp --> ExecSuccess{"Exec<br/>Success?"}
     
-    ExecSuccess -->|Yes| ReplaceProcess[Process Replaced<br/>No Return]
-    ExecSuccess -->|No| ExecError{Error<br/>Type?}
+    ExecSuccess -->|"Yes"| ReplaceProcess["Process Replaced<br/>No Return"]
+    ExecSuccess -->|"No"| ExecError{"Error<br/>Type?"}
     
-    ExecError -->|Not Found| Exit127[Print Error<br/>os._exit 127]
-    ExecError -->|No Permission| Exit126[Print Error<br/>os._exit 126]
-    ExecError -->|Other| Exit1[Print Error<br/>os._exit 1]
+    ExecError -->|"Not Found"| Exit127["Print Error<br/>os._exit 127"]
+    ExecError -->|"No Permission"| Exit126["Print Error<br/>os._exit 126"]
+    ExecError -->|"Other"| Exit1["Print Error<br/>os._exit 1"]
     
-    ForkDecision -->|Parent| WaitChild[Wait for Child<br/>os.waitpid]
-    WaitChild --> ExtractStatus[Extract Exit Status<br/>WIFEXITED, WEXITSTATUS]
+    ForkDecision -->|"Parent"| WaitChild["Wait for Child<br/>os.waitpid"]
+    WaitChild --> ExtractStatus["Extract Exit Status<br/>WIFEXITED WEXITSTATUS"]
     
-    ExtractStatus --> CheckShowExit{Show<br/>Exit Codes?}
-    CheckShowExit -->|Never| ShowPrompt
-    CheckShowExit -->|On Failure| CheckCode{Exit<br/>Code != 0?}
-    CheckShowExit -->|Always| DisplayExit[Display Exit Code<br/>Exit: N]
+    ExtractStatus --> CheckShowExit{"Show<br/>Exit Codes?"}
+    CheckShowExit -->|"Never"| ShowPrompt
+    CheckShowExit -->|"On Failure"| CheckCode{"Exit<br/>Code != 0?"}
+    CheckShowExit -->|"Always"| DisplayExit["Display Exit Code<br/>Exit: N"]
     
-    CheckCode -->|Yes| DisplayExit
-    CheckCode -->|No| ShowPrompt
+    CheckCode -->|"Yes"| DisplayExit
+    CheckCode -->|"No"| ShowPrompt
     DisplayExit --> ShowPrompt
     
-    ExitShell --> End([Shell Exits])
+    ExitShell --> End(["Shell Exits"])
     
     %% Signal Handling
-    ReadInput -.->|Ctrl+D| EOFCaught[Catch EOFError]
-    ReadInput -.->|Ctrl+C| InterruptCaught[Catch KeyboardInterrupt]
+    ReadInput -.->|"Ctrl+D"| EOFCaught["Catch EOFError"]
+    ReadInput -.->|"Ctrl+C"| InterruptCaught["Catch KeyboardInterrupt"]
     EOFCaught --> ExitShell
-    InterruptCaught --> NewLine[Print Newline]
+    InterruptCaught --> NewLine["Print Newline"]
     NewLine --> ShowPrompt
     
     %% Error Handling
-    ParseCommand -.->|Parse Error| ShowError2[Print Error Message]
+    ParseCommand -.->|"Parse Error"| ShowError2["Print Error Message"]
     ShowError2 --> ShowPrompt
     
-    ExecuteBuiltin -.->|Exception| CatchError[Catch Exception<br/>Print Error]
-    ExecuteExternal -.->|Exception| CatchError
-    CatchError --> CheckVerbose{Verbose<br/>Errors?}
-    CheckVerbose -->|Yes| ShowTraceback[Print Traceback]
-    CheckVerbose -->|No| ShowPrompt
+    ExecuteBuiltin -.->|"Exception"| CatchError["Catch Exception<br/>Print Error"]
+    ExecuteExternal -.->|"Exception"| CatchError
+    CatchError --> CheckVerbose{"Verbose<br/>Errors?"}
+    CheckVerbose -->|"Yes"| ShowTraceback["Print Traceback"]
+    CheckVerbose -->|"No"| ShowPrompt
     ShowTraceback --> ShowPrompt
     
     style Start fill:#e8f5e9

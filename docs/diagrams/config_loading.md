@@ -4,59 +4,59 @@ This diagram shows the priority-based configuration loading and merging process.
 
 ```mermaid
 flowchart TD
-    Start([Shell Starts]) --> GetDefaults[Load Built-in Defaults<br/>get_default_config]
+    Start(["Shell Starts"]) --> GetDefaults["Load Built-in Defaults<br/>get_default_config"]
     
-    GetDefaults --> CreateBase[Create Base Config]
-    CreateBase --> |prompt.text: AkujobiP1><br/>exit.message: Bye!<br/>show_exit_codes: on_failure<br/>etc.| Base[Base Configuration]
+    GetDefaults --> CreateBase["Create Base Config"]
+    CreateBase --> Base["Base Configuration<br/>with defaults"]
     
-    Base --> CheckUser{User Config<br/>Exists?}
+    Base --> CheckUser{"User Config<br/>Exists?"}
     
-    CheckUser -->|No| CheckLocal
-    CheckUser -->|Yes| LoadUser[Load User Config<br/>~/.config/akujobip1/config.yaml]
+    CheckUser -->|"No"| CheckLocal
+    CheckUser -->|"Yes"| LoadUser["Load User Config<br/>config.yaml"]
     
-    LoadUser --> ParseUser{Parse<br/>Success?}
-    ParseUser -->|No| WarnUser[Print Warning<br/>Invalid YAML]
-    ParseUser -->|Yes| MergeUser[Deep Merge<br/>User -> Base]
+    LoadUser --> ParseUser{"Parse<br/>Success?"}
+    ParseUser -->|"No"| WarnUser["Print Warning<br/>Invalid YAML"]
+    ParseUser -->|"Yes"| MergeUser["Deep Merge<br/>User to Base"]
     
     WarnUser --> CheckLocal
-    MergeUser --> Config1[Configuration<br/>Priority 1]
+    MergeUser --> Config1["Configuration<br/>Priority 1"]
     Config1 --> CheckLocal
     
-    CheckLocal{Local Config<br/>Exists?}
-    CheckLocal -->|No| CheckEnv
-    CheckLocal -->|Yes| LoadLocal[Load Local Config<br/>./akujobip1.yaml]
+    CheckLocal{"Local Config<br/>Exists?"}
+    CheckLocal -->|"No"| CheckEnv
+    CheckLocal -->|"Yes"| LoadLocal["Load Local Config<br/>akujobip1.yaml"]
     
-    LoadLocal --> ParseLocal{Parse<br/>Success?}
-    ParseLocal -->|No| WarnLocal[Print Warning<br/>Invalid YAML]
-    ParseLocal -->|Yes| MergeLocal[Deep Merge<br/>Local -> Config]
+    LoadLocal --> ParseLocal{"Parse<br/>Success?"}
+    ParseLocal -->|"No"| WarnLocal["Print Warning<br/>Invalid YAML"]
+    ParseLocal -->|"Yes"| MergeLocal["Deep Merge<br/>Local to Config"]
     
     WarnLocal --> CheckEnv
-    MergeLocal --> Config2[Configuration<br/>Priority 2]
+    MergeLocal --> Config2["Configuration<br/>Priority 2"]
     Config2 --> CheckEnv
     
-    CheckEnv{$AKUJOBIP1_CONFIG<br/>Set?}
-    CheckEnv -->|No| ExpandPaths
-    CheckEnv -->|Yes| LoadEnv[Load Environment Config<br/>$AKUJOBIP1_CONFIG path]
+    CheckEnv{"ENV CONFIG<br/>Set?"}
+    CheckEnv -->|"No"| ExpandPaths
+    CheckEnv -->|"Yes"| LoadEnv["Load Environment Config<br/>from ENV path"]
     
-    LoadEnv --> ParseEnv{Parse<br/>Success?}
-    ParseEnv -->|No| WarnEnv[Print Warning<br/>Invalid config file]
-    ParseEnv -->|Yes| MergeEnv[Deep Merge<br/>Env -> Config]
+    LoadEnv --> ParseEnv{"Parse<br/>Success?"}
+    ParseEnv -->|"No"| WarnEnv["Print Warning<br/>Invalid config"]
+    ParseEnv -->|"Yes"| MergeEnv["Deep Merge<br/>Env to Config"]
     
     WarnEnv --> ExpandPaths
-    MergeEnv --> Config3[Configuration<br/>Priority 3]
+    MergeEnv --> Config3["Configuration<br/>Priority 3"]
     Config3 --> ExpandPaths
     
-    ExpandPaths[Expand Paths<br/>~ and $VAR]
-    ExpandPaths --> |~/.akujobip1.log<br/>-> /home/user/.akujobip1.log| ConfigExpanded[Expanded Configuration]
+    ExpandPaths["Expand Paths<br/>tilde and vars"]
+    ExpandPaths --> ConfigExpanded["Expanded Configuration"]
     
-    ConfigExpanded --> Validate[Validate Config<br/>Check types, enums]
+    ConfigExpanded --> Validate["Validate Config<br/>Check types enums"]
     
-    Validate --> CheckValid{All<br/>Valid?}
-    CheckValid -->|No| WarnValidation[Print Warnings<br/>Use defaults for invalid]
-    CheckValid -->|Yes| FinalConfig
-    WarnValidation --> FinalConfig[Final Configuration<br/>Ready for Use]
+    Validate --> CheckValid{"All<br/>Valid?"}
+    CheckValid -->|"No"| WarnValidation["Print Warnings<br/>Use defaults"]
+    CheckValid -->|"Yes"| FinalConfig
+    WarnValidation --> FinalConfig["Final Configuration<br/>Ready for Use"]
     
-    FinalConfig --> End([Return to Shell])
+    FinalConfig --> End(["Return to Shell"])
     
     style Start fill:#e8f5e9
     style End fill:#e8f5e9

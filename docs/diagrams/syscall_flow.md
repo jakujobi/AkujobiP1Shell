@@ -5,39 +5,39 @@ This diagram shows the detailed sequence of POSIX system calls during external c
 ```mermaid
 sequenceDiagram
     participant User
-    participant Shell as Shell Process<br/>(Parent)
+    participant Shell as Shell Process (Parent)
     participant Kernel as Linux Kernel
     participant Child as Child Process
     participant Program as External Program
 
-    User->>Shell: Enter command: ls -la
+    User->>Shell: Enter command ls -la
     
-    Note over Shell: Parse command<br/>args = ["ls", "-la"]
+    Note over Shell: Parse command<br/>args = [ls, -la]
     
     Shell->>Kernel: fork()
-    Note over Kernel: Create duplicate process<br/>Copy memory, file descriptors
+    Note over Kernel: Create duplicate process<br/>Copy memory and file descriptors
     
-    Kernel-->>Shell: Return child PID (e.g., 1234)
-    Kernel-->>Child: Return 0 (in child)
+    Kernel-->>Shell: Return child PID 1234
+    Kernel-->>Child: Return 0 in child
     
-    Note over Shell,Child: Both processes continue from here
+    Note over Shell,Child: Both processes continue
     
     rect rgb(255, 240, 240)
         Note over Child: CHILD PROCESS PATH
-        Child->>Child: signal(SIGINT, SIG_DFL)
+        Child->>Child: signal SIGINT SIG_DFL
         Note over Child: Reset signal handlers<br/>Allow Ctrl+C to work
         
-        Child->>Kernel: execvp("ls", ["ls", "-la"])
-        Note over Kernel: Search PATH for "ls"<br/>Found: /usr/bin/ls
+        Child->>Kernel: execvp ls with args
+        Note over Kernel: Search PATH for ls<br/>Found /usr/bin/ls
         
         Kernel->>Kernel: Replace process image<br/>Load /usr/bin/ls
         
         alt Exec Success
-            Kernel->>Program: Transfer control<br/>(Child becomes ls)
-            Note over Program: Process replaced<br/>execvp() never returns
+            Kernel->>Program: Transfer control<br/>Child becomes ls
+            Note over Program: Process replaced<br/>execvp never returns
             
             Program->>Program: Execute ls code<br/>List directory
-            Program->>Kernel: exit(0)
+            Program->>Kernel: exit 0
             Note over Program: Process terminates<br/>with exit code 0
             
         else Exec Failure
@@ -45,47 +45,47 @@ sequenceDiagram
             
             alt Command Not Found
                 Child->>Child: Catch FileNotFoundError
-                Child->>User: stderr: "ls: command not found"
-                Child->>Kernel: os._exit(127)
+                Child->>User: stderr command not found
+                Child->>Kernel: os exit 127
             else Permission Denied
                 Child->>Child: Catch PermissionError
-                Child->>User: stderr: "ls: Permission denied"
-                Child->>Kernel: os._exit(126)
+                Child->>User: stderr Permission denied
+                Child->>Kernel: os exit 126
             else Other Error
                 Child->>Child: Catch Exception
-                Child->>User: stderr: error message
-                Child->>Kernel: os._exit(1)
+                Child->>User: stderr error message
+                Child->>Kernel: os exit 1
             end
         end
     end
     
     rect rgb(240, 248, 255)
         Note over Shell: PARENT PROCESS PATH
-        Shell->>Kernel: waitpid(1234, 0)
+        Shell->>Kernel: waitpid 1234 0
         Note over Shell: Block until child<br/>PID 1234 terminates
         
         Note over Kernel: Wait for child<br/>to change state
         
-        Kernel-->>Shell: Return (1234, status)
+        Kernel-->>Shell: Return 1234 status
         Note over Kernel: status is encoded<br/>Contains exit info
         
-        Shell->>Shell: WIFEXITED(status)
+        Shell->>Shell: WIFEXITED status
         Note over Shell: Check if exited normally<br/>Returns True
         
-        Shell->>Shell: WEXITSTATUS(status)
+        Shell->>Shell: WEXITSTATUS status
         Note over Shell: Extract exit code<br/>Returns 0
         
-        alt Show Exit Codes = "always"
-            Shell->>User: stdout: "[Exit: 0]"
-        else Show Exit Codes = "on_failure"
-            Note over Shell: Exit code is 0<br/>Don't display
-        else Show Exit Codes = "never"
-            Note over Shell: Don't display
+        alt Show Exit Codes always
+            Shell->>User: stdout Exit 0
+        else Show Exit Codes on failure
+            Note over Shell: Exit code is 0<br/>Do not display
+        else Show Exit Codes never
+            Note over Shell: Do not display
         end
     end
     
-    Shell->>Shell: Return exit code (0)
-    Shell->>User: Display prompt<br/>AkujobiP1>
+    Shell->>Shell: Return exit code 0
+    Shell->>User: Display prompt AkujobiP1
 ```
 
 ## Detailed System Call Explanation
