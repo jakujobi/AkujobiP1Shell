@@ -33,34 +33,27 @@ sudo apt install python3.12-venv
 
 ### One-Command Setup
 
-After installing `python3-venv` with sudo, simply run:
+After installing `python3-venv` with sudo, simply run this **single command**:
 
 ```bash
-./setup.sh
+./activate.sh
 ```
 
-The script will:
+This script will:
+- Check if you're in the correct project directory
 - Check if `python3-venv` is installed (with clear error if not)
 - Test that virtual environment creation works
-- Create/verify the virtual environment
+- Create/verify the virtual environment (~50-100MB disk space)
 - Install the package and dependencies
+- Activate the virtual environment
 - Set everything up automatically
 
 **Note:** If you see an error about `python3-venv` not being installed, you must install it with `sudo` first (see Prerequisites above).
 
 ### After Setup
 
-**Activate the virtual environment:**
-```bash
-source venv/bin/activate
-```
+The virtual environment will be activated automatically. You can then run the shell:
 
-Or use the helper script:
-```bash
-./activate.sh
-```
-
-**Run the shell:**
 ```bash
 akujobip1
 ```
