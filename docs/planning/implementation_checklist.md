@@ -36,50 +36,69 @@
 ## Phase 2: Core Shell Implementation
 
 ### 2.1 Configuration System (config.py)
-- [ ] Implement `load_config()` function
-  - [ ] Check `$AKUJOBIP1_CONFIG` environment variable
-  - [ ] Check `./akujobip1.yaml` (current directory)
-  - [ ] Check `~/.config/akujobip1/config.yaml` (user config)
-  - [ ] Fallback to built-in defaults
-- [ ] Implement `merge_config()` for deep merging
-- [ ] Implement `validate_config()` for validation
-- [ ] Implement `expand_paths()` for tilde expansion
-- [ ] Add configuration schema documentation
-- [ ] Write unit tests for config loading
+- [x] Implement `load_config()` function
+  - [x] Check `$AKUJOBIP1_CONFIG` environment variable
+  - [x] Check `./akujobip1.yaml` (current directory)
+  - [x] Check `~/.config/akujobip1/config.yaml` (user config)
+  - [x] Fallback to built-in defaults
+- [x] Implement `merge_config()` for deep merging
+- [x] Implement `validate_config()` for validation
+- [x] Implement `expand_paths()` for tilde expansion
+- [x] Add configuration schema documentation
+- [x] Write unit tests for config loading
+  - [x] 39 tests implemented covering all functionality
+  - [x] 92% code coverage achieved (exceeds 90% target)
+  - [x] All tests passing
 
 ### 2.2 Command Parser (parser.py)
-- [ ] Implement `parse_command(command_line)` function
-  - [ ] Use `shlex.split()` for tokenization
-  - [ ] Handle quoted arguments correctly
-  - [ ] Handle empty input
-  - [ ] Handle whitespace-only input
-- [ ] Implement `expand_wildcards(args)` function
-  - [ ] Use `glob.glob()` for wildcard expansion
-  - [ ] Handle no matches (return literal)
-  - [ ] Handle multiple wildcards
-- [ ] Write unit tests for parser
-  - [ ] Test quoted arguments
-  - [ ] Test wildcards
-  - [ ] Test edge cases
+- [x] Implement `parse_command(command_line, config)` function
+  - [x] Use `shlex.split()` for tokenization
+  - [x] Handle quoted arguments correctly (single and double quotes)
+  - [x] Handle empty input
+  - [x] Handle whitespace-only input
+  - [x] Handle unclosed quotes with error messages
+  - [x] Integrate with wildcard expansion
+- [x] Implement `expand_wildcards(args, config)` function
+  - [x] Use `glob.glob()` for wildcard expansion
+  - [x] Handle no matches (return literal)
+  - [x] Handle multiple wildcards
+  - [x] Support *, ?, and [...] wildcards
+  - [x] Respect config['glob']['enabled'] setting
+  - [x] Sort expansion results
+- [x] Implement `_contains_wildcard()` helper function
+- [x] Write comprehensive unit tests for parser
+  - [x] Test quoted arguments (7 tests)
+  - [x] Test wildcards (7 tests)
+  - [x] Test edge cases (6 tests)
+  - [x] Test configuration integration (4 tests)
+  - [x] Test error handling (3 tests)
+  - [x] Test integration scenarios (6 tests)
+  - [x] Test real-world scenarios (6 tests)
+  - [x] 56 total tests across 8 test classes
+  - [x] 97% code coverage achieved (exceeds 90% target)
+  - [x] All tests passing
 
 ### 2.3 Built-in Commands (builtins.py)
-- [ ] Create `BuiltinCommand` base class
-- [ ] Implement `exit` command
-  - [ ] Print configured exit message
-  - [ ] Return exit code to shell
-- [ ] Implement `cd` command
-  - [ ] Handle no arguments (cd to home)
-  - [ ] Handle directory path argument
-  - [ ] Handle `cd -` (previous directory)
-  - [ ] Error handling for invalid paths
-  - [ ] Optionally show pwd after cd (if configured)
-- [ ] Implement `pwd` command
-  - [ ] Print current working directory
-- [ ] Implement `help` command
-  - [ ] List available built-in commands
-  - [ ] Show usage information
-- [ ] Create `get_builtin(name)` dispatcher function
-- [ ] Write unit tests for each built-in
+- [x] Create `BuiltinCommand` base class
+- [x] Implement `exit` command
+  - [x] Print configured exit message
+  - [x] Return exit code to shell (-1 to signal termination)
+- [x] Implement `cd` command
+  - [x] Handle no arguments (cd to home)
+  - [x] Handle directory path argument
+  - [x] Handle `cd -` (previous directory)
+  - [x] Error handling for invalid paths
+  - [x] Optionally show pwd after cd (if configured)
+- [x] Implement `pwd` command
+  - [x] Print current working directory
+- [x] Implement `help` command
+  - [x] List available built-in commands
+  - [x] Show usage information
+- [x] Create `get_builtin(name)` dispatcher function
+- [x] Write unit tests for each built-in
+  - [x] 35 tests implemented covering all functionality
+  - [x] 100% code coverage achieved (exceeds 90% target)
+  - [x] All tests passing
 
 ### 2.4 Process Executor (executor.py)
 - [ ] Implement `execute_external_command(args, config)` function
@@ -411,9 +430,11 @@
 
 ## Progress Tracking
 
-**Current Status:** Phase 1 Complete - Ready for Phase 2 (Core Implementation)
+**Current Status:** Phase 2.3 Complete - Built-in Commands Implemented (100% coverage, 35 tests passing)
 
 **Completed:**
+
+**Phase 1 - Project Setup:**
 1. [x] Source directory structure created (src/akujobip1/)
 2. [x] All module placeholders created with proper structure
 3. [x] Configuration files created (akujobip1.yaml, examples/config.yaml)
@@ -422,13 +443,46 @@
 6. [x] Installation tested and verified working (`pip install -e .`)
 7. [x] Entry point (`akujobip1` command) working correctly
 
+**Phase 2.1 - Configuration System:**
+8. [x] Implemented `get_default_config()` with complete default configuration
+9. [x] Implemented `merge_config()` with recursive deep merging algorithm
+10. [x] Implemented `expand_paths()` for tilde and environment variable expansion
+11. [x] Implemented `validate_config()` with comprehensive validation rules
+12. [x] Implemented `load_yaml_file()` with error handling
+13. [x] Implemented `load_config()` with 4-level priority loading
+14. [x] Created comprehensive test suite (39 tests, 6 test classes)
+15. [x] Achieved 92% code coverage (exceeds 90% target)
+16. [x] Updated changelog with Phase 2.1 completion
+17. [x] Updated version to 0.2.0
+
+**Phase 2.2 - Command Parser:**
+18. [x] Implemented `parse_command()` with shlex tokenization and quote handling
+19. [x] Implemented `expand_wildcards()` with glob pattern matching
+20. [x] Implemented `_contains_wildcard()` helper function
+21. [x] Integrated parser with configuration system
+22. [x] Added comprehensive error handling (unclosed quotes, empty input)
+23. [x] Created comprehensive test suite (56 tests, 8 test classes)
+24. [x] Achieved 97% code coverage (exceeds 90% target)
+25. [x] Updated changelog with Phase 2.2 completion
+26. [x] Updated version to 0.3.0
+
+**Phase 2.3 - Built-in Commands:**
+27. [x] Implemented `BuiltinCommand` base class
+28. [x] Implemented `ExitCommand` with configurable message
+29. [x] Implemented `CdCommand` with home, paths, cd -, and error handling
+30. [x] Implemented `PwdCommand` to print working directory
+31. [x] Implemented `HelpCommand` to show available commands
+32. [x] Implemented `get_builtin()` dispatcher function
+33. [x] Created comprehensive test suite (35 tests, 12 test classes)
+34. [x] Achieved 100% code coverage (exceeds 90% target)
+35. [x] Updated changelog with Phase 2.3 completion
+36. [x] Updated version to 0.4.0
+
 **Next Steps:**
-1. Implement configuration system (config.py)
-2. Implement command parser (parser.py)
-3. Implement built-in commands (builtins.py)
-4. Implement process executor (executor.py)
-5. Implement main shell loop (shell.py)
-6. Write unit tests for each module
+1. Phase 2.4: Implement process executor (executor.py)
+2. Phase 2.5: Implement main shell loop (shell.py)
+3. Phase 3: Error handling and edge cases
+4. Phase 4: Testing (integration and bash tests)
 
 **Estimated Completion Time:** 3-4 weeks
 - Week 1: Core implementation
