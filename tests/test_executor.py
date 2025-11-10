@@ -4,6 +4,7 @@ Test suite for the executor module.
 This module tests external command execution using fork/exec/wait.
 """
 
+import shutil
 import sys
 import pytest
 from unittest.mock import patch
@@ -139,6 +140,9 @@ class TestExecuteExternalCommandFailure:
 # Test Class 3: Signal Termination
 
 
+@pytest.mark.skipif(
+    shutil.which("bash") is None, reason="bash required for signal tests"
+)
 class TestExecuteExternalCommandSignals:
     """Test signal handling."""
 

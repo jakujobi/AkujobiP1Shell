@@ -113,11 +113,17 @@ def run_shell(config: Dict[str, Any]) -> int:
     if prompt_config is None:
         prompt_config = {}
     prompt = prompt_config.get("text", "AkujobiP1> ")
+    # Guard against non-string prompt values (None, int, etc.)
+    if not isinstance(prompt, str):
+        prompt = "AkujobiP1> "
 
     exit_config = config.get("exit", {})
     if exit_config is None:
         exit_config = {}
     exit_message = exit_config.get("message", "Bye!")
+    # Guard against non-string exit message values
+    if not isinstance(exit_message, str):
+        exit_message = "Bye!"
 
     # Main REPL loop - continues until exit command or Ctrl+D
     while True:

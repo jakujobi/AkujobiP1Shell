@@ -199,11 +199,15 @@ def display_exit_status(status: int, config: Dict[str, Any]) -> None:
         # Display if configured
         if should_display:
             # Use format string from config
+            # Guard against non-string format values (None, int, etc.)
+            if not isinstance(format_str, str):
+                format_str = "[Exit: {code}]"
+
             # Handle format errors gracefully
             try:
                 message = format_str.format(code=exit_code)
                 print(message)
-            except (KeyError, ValueError):
+            except (KeyError, ValueError, AttributeError):
                 # Format string is invalid - use default
                 print(f"[Exit: {exit_code}]")
 

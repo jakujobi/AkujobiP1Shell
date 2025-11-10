@@ -1,5 +1,69 @@
 # Changelog
 
+## [0.8.1] - 2025-11-10
+
+### Bug Fixes - Configuration Robustness
+
+#### Overview
+Fixed three critical configuration robustness issues identified in code review. These fixes prevent crashes when users provide non-string values in YAML configuration files.
+
+#### Issues Fixed
+
+**1. Guard bash-dependent tests** ✅
+- Issue: Signal tests use `bash -c` but fail on slim images without bash
+- Fix: Added `@pytest.mark.skipif(shutil.which("bash") is None)` to `TestExecuteExternalCommandSignals`
+- Impact: Tests skip gracefully on systems without bash installed
+- File: `tests/test_executor.py`
+
+**2. Guard exit-code formatting against non-strings** ✅
+- Issue: If `execution.exit_code_format` is `null` or non-string, `format_str.format()` raises `AttributeError`
+- Fix: Added `isinstance(format_str, str)` check before formatting
+- Impact: Prevents "Shell error: 'NoneType' object has no attribute 'format'" after every command
+- File: `src/akujobip1/executor.py`
+
+**3. Normalize prompt text before calling input()** ✅
+- Issue: If `prompt.text` is `null` or non-string, `input(prompt)` raises `TypeError`
+- Fix: Added `isinstance(prompt, str)` and `isinstance(exit_message, str)` checks
+- Impact: Prevents shell from breaking when prompt/exit message is non-string
+- File: `src/akujobip1/shell.py`
+
+#### Changes Made
+
+**`tests/test_executor.py`:**
+- Added `import shutil` at top of file
+- Added decorator to `TestExecuteExternalCommandSignals` class
+- Tests now skip gracefully on systems without bash
+
+**`src/akujobip1/executor.py`:**
+- Added type check: `if not isinstance(format_str, str): format_str = "[Exit: {code}]"`
+- Added `AttributeError` to exception catch list
+- Ensures format string is always a string before calling `.format()`
+
+**`src/akujobip1/shell.py`:**
+- Added type check for prompt: `if not isinstance(prompt, str): prompt = "AkujobiP1> "`
+- Added type check for exit_message: `if not isinstance(exit_message, str): exit_message = "Bye!"`
+- Ensures both values are strings before use
+
+#### Testing
+- ✅ All 229 tests passing
+- ✅ All 4 bash tests passing
+- ✅ No linting errors
+- ✅ Code formatted with black
+
+#### Benefits
+1. **More Robust:** Handles malformed YAML configurations gracefully
+2. **Better User Experience:** Clear defaults instead of crashes
+3. **Environment Flexibility:** Works on slim Docker images without bash
+4. **Production Ready:** Defensive programming prevents edge case failures
+
+#### Files Modified
+- `tests/test_executor.py` - Added shutil import, skipif decorator
+- `src/akujobip1/executor.py` - Type guard for format string
+- `src/akujobip1/shell.py` - Type guards for prompt and exit message
+- Formatted 2 files with black
+
+---
+
 ## [0.8.0] - 2025-11-10
 
 ### Phase 5: CI/CD Pipeline - COMPLETE
