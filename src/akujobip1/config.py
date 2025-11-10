@@ -26,40 +26,24 @@ def get_default_config() -> Dict[str, Any]:
         Default configuration dictionary with all settings.
     """
     return {
-        'prompt': {
-            'text': 'AkujobiP1> '
+        "prompt": {"text": "AkujobiP1> "},
+        "exit": {"message": "Bye!"},
+        "execution": {
+            "show_exit_codes": "on_failure",  # Options: never, on_failure, always
+            "exit_code_format": "[Exit: {code}]",
         },
-        'exit': {
-            'message': 'Bye!'
+        "glob": {"enabled": True, "show_expansions": False},
+        "builtins": {
+            "cd": {"enabled": True, "show_pwd_after": False},
+            "pwd": {"enabled": True},
+            "help": {"enabled": True},
         },
-        'execution': {
-            'show_exit_codes': 'on_failure',  # Options: never, on_failure, always
-            'exit_code_format': '[Exit: {code}]'
+        "errors": {"verbose": False},
+        "debug": {
+            "log_commands": False,
+            "log_file": "~/.akujobip1.log",
+            "show_fork_pids": False,
         },
-        'glob': {
-            'enabled': True,
-            'show_expansions': False
-        },
-        'builtins': {
-            'cd': {
-                'enabled': True,
-                'show_pwd_after': False
-            },
-            'pwd': {
-                'enabled': True
-            },
-            'help': {
-                'enabled': True
-            }
-        },
-        'errors': {
-            'verbose': False
-        },
-        'debug': {
-            'log_commands': False,
-            'log_file': '~/.akujobip1.log',
-            'show_fork_pids': False
-        }
     }
 
 
@@ -119,7 +103,7 @@ def expand_paths(config: Dict[str, Any]) -> Dict[str, Any]:
             result[key] = expand_paths(value)
         elif isinstance(value, str):
             # Expand tilde and environment variables in strings
-            if '~' in value or '$' in value:
+            if "~" in value or "$" in value:
                 expanded = os.path.expanduser(value)
                 expanded = os.path.expandvars(expanded)
                 result[key] = expanded
@@ -153,32 +137,36 @@ def validate_config(config: Dict[str, Any]) -> bool:
     valid = True
 
     # Check required keys
-    if 'prompt' not in config or 'text' not in config.get('prompt', {}):
-        print("Warning: prompt.text not found in config, using default", file=sys.stderr)
+    if "prompt" not in config or "text" not in config.get("prompt", {}):
+        print(
+            "Warning: prompt.text not found in config, using default", file=sys.stderr
+        )
         valid = False
 
-    if 'exit' not in config or 'message' not in config.get('exit', {}):
-        print("Warning: exit.message not found in config, using default", file=sys.stderr)
+    if "exit" not in config or "message" not in config.get("exit", {}):
+        print(
+            "Warning: exit.message not found in config, using default", file=sys.stderr
+        )
         valid = False
 
     # Validate show_exit_codes enum
-    if 'execution' in config:
-        show_mode = config['execution'].get('show_exit_codes')
-        if show_mode not in ['never', 'on_failure', 'always']:
+    if "execution" in config:
+        show_mode = config["execution"].get("show_exit_codes")
+        if show_mode not in ["never", "on_failure", "always"]:
             print(
                 f"Warning: Invalid show_exit_codes value '{show_mode}', "
                 "must be 'never', 'on_failure', or 'always'",
-                file=sys.stderr
+                file=sys.stderr,
             )
             valid = False
 
     # Validate boolean fields
     bool_paths = [
-        ('glob', 'enabled'),
-        ('glob', 'show_expansions'),
-        ('errors', 'verbose'),
-        ('debug', 'log_commands'),
-        ('debug', 'show_fork_pids'),
+        ("glob", "enabled"),
+        ("glob", "show_expansions"),
+        ("errors", "verbose"),
+        ("debug", "log_commands"),
+        ("debug", "show_fork_pids"),
     ]
 
     for path in bool_paths:
@@ -189,7 +177,7 @@ def validate_config(config: Dict[str, Any]) -> bool:
             if not isinstance(value, bool):
                 print(
                     f"Warning: {'.'.join(path)} should be boolean, got {type(value).__name__}",
-                    file=sys.stderr
+                    file=sys.stderr,
                 )
                 valid = False
         except (KeyError, TypeError):
@@ -216,13 +204,16 @@ def load_yaml_file(filepath: Path) -> Optional[Dict[str, Any]]:
         return None
 
     try:
-        with open(filepath, 'r') as f:
+        with open(filepath, "r") as f:
             data = yaml.safe_load(f)
             if data is None:
                 # Empty file
                 return {}
             if not isinstance(data, dict):
-                print(f"Warning: Config file {filepath} is not a valid YAML dictionary", file=sys.stderr)
+                print(
+                    f"Warning: Config file {filepath} is not a valid YAML dictionary",
+                    file=sys.stderr,
+                )
                 return None
             return data
     except yaml.YAMLError as e:
@@ -250,23 +241,26 @@ def load_config() -> Dict[str, Any]:
     config = get_default_config()
 
     # Priority 1 (lowest): User config directory
-    user_config_dir = Path.home() / '.config' / 'akujobip1'
-    user_config_file = user_config_dir / 'config.yaml'
+    user_config_dir = Path.home() / ".config" / "akujobip1"
+    user_config_file = user_config_dir / "config.yaml"
     if user_data := load_yaml_file(user_config_file):
         config = merge_config(config, user_data)
 
     # Priority 2: Current directory
-    local_config_file = Path.cwd() / 'akujobip1.yaml'
+    local_config_file = Path.cwd() / "akujobip1.yaml"
     if local_data := load_yaml_file(local_config_file):
         config = merge_config(config, local_data)
 
     # Priority 3 (highest): Environment variable
-    if env_config_path := os.environ.get('AKUJOBIP1_CONFIG'):
+    if env_config_path := os.environ.get("AKUJOBIP1_CONFIG"):
         env_config_file = Path(env_config_path).expanduser()
         if env_data := load_yaml_file(env_config_file):
             config = merge_config(config, env_data)
         elif env_config_file.exists():
-            print(f"Warning: Invalid or unreadable config file at $AKUJOBIP1_CONFIG: {env_config_path}", file=sys.stderr)
+            print(
+                f"Warning: Invalid or unreadable config file at $AKUJOBIP1_CONFIG: {env_config_path}",
+                file=sys.stderr,
+            )
 
     # Expand paths (~ and environment variables)
     config = expand_paths(config)

@@ -53,10 +53,10 @@ def execute_external_command(args: List[str], config: Dict[str, Any]) -> int:
 
     # Debug output if enabled
     # Handle None values in config (malformed config)
-    debug_config = config.get('debug', {})
+    debug_config = config.get("debug", {})
     if debug_config is None:
         debug_config = {}
-    if debug_config.get('show_fork_pids', False):
+    if debug_config.get("show_fork_pids", False):
         print(f"[About to fork for: {args[0]}]", file=sys.stderr)
 
     # Step 1: Fork the process
@@ -85,26 +85,32 @@ def execute_external_command(args: List[str], config: Dict[str, Any]) -> int:
             # Command not found in PATH
             # Use POSIX standard exit code 127
             print(f"{args[0]}: command not found", file=sys.stderr)
-            os._exit(127)  # CRITICAL: Must use os._exit(), NOT return! (bypasses Python cleanup)
+            os._exit(
+                127
+            )  # CRITICAL: Must use os._exit(), NOT return! (bypasses Python cleanup)
         except PermissionError:
             # Command found but not executable
             # Use POSIX standard exit code 126
             print(f"{args[0]}: Permission denied", file=sys.stderr)
-            os._exit(126)  # CRITICAL: Must use os._exit(), NOT return! (bypasses Python cleanup)
+            os._exit(
+                126
+            )  # CRITICAL: Must use os._exit(), NOT return! (bypasses Python cleanup)
         except Exception as e:
             # Catch any other unexpected errors
             # Use generic error code 1
             print(f"{args[0]}: {e}", file=sys.stderr)
-            os._exit(1)  # CRITICAL: Must use os._exit(), NOT return! (bypasses Python cleanup)
+            os._exit(
+                1
+            )  # CRITICAL: Must use os._exit(), NOT return! (bypasses Python cleanup)
 
     else:
         # PARENT PROCESS PATH
         # Debug output showing child PID
         # Handle None values in config (malformed config)
-        debug_config = config.get('debug', {})
+        debug_config = config.get("debug", {})
         if debug_config is None:
             debug_config = {}
-        if debug_config.get('show_fork_pids', False):
+        if debug_config.get("show_fork_pids", False):
             print(f"[Forked child PID: {pid}]", file=sys.stderr)
 
         # Step 3: Wait for child to complete
@@ -170,11 +176,11 @@ def display_exit_status(status: int, config: Dict[str, Any]) -> None:
     """
     # Get configuration settings with defaults
     # Handle None values in config (malformed config)
-    execution_config = config.get('execution', {})
+    execution_config = config.get("execution", {})
     if execution_config is None:
         execution_config = {}
-    show_mode = execution_config.get('show_exit_codes', 'on_failure')
-    format_str = execution_config.get('exit_code_format', '[Exit: {code}]')
+    show_mode = execution_config.get("show_exit_codes", "on_failure")
+    format_str = execution_config.get("exit_code_format", "[Exit: {code}]")
 
     # Check how the process terminated
     if os.WIFEXITED(status):
@@ -183,11 +189,11 @@ def display_exit_status(status: int, config: Dict[str, Any]) -> None:
 
         # Determine if we should display based on mode
         should_display = False
-        if show_mode == 'always':
+        if show_mode == "always":
             should_display = True
-        elif show_mode == 'on_failure' and exit_code != 0:
+        elif show_mode == "on_failure" and exit_code != 0:
             should_display = True
-        elif show_mode == 'never':
+        elif show_mode == "never":
             should_display = False
 
         # Display if configured
@@ -216,4 +222,3 @@ def display_exit_status(status: int, config: Dict[str, Any]) -> None:
 
     # Note: WIFCONTINUED exists on some systems but not all
     # We don't handle it as it's rare and not relevant for our use case
-

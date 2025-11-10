@@ -46,7 +46,7 @@ def parse_command(command_line: str, config: Dict[str, Any]) -> List[str]:
     except ValueError as e:
         # shlex can raise ValueError for unclosed quotes
         # Print error and return empty list (graceful degradation)
-        print(f"Parse error: {e}", file=__import__('sys').stderr)
+        print(f"Parse error: {e}", file=__import__("sys").stderr)
         return []
 
     # If no arguments after parsing, return empty list
@@ -55,10 +55,10 @@ def parse_command(command_line: str, config: Dict[str, Any]) -> List[str]:
 
     # Expand wildcards if enabled in config
     # Handle None values in config (malformed config)
-    glob_config = config.get('glob', {})
+    glob_config = config.get("glob", {})
     if glob_config is None:
         glob_config = {}
-    if glob_config.get('enabled', True):
+    if glob_config.get("enabled", True):
         args = expand_wildcards(args, config)
 
     return args
@@ -90,10 +90,10 @@ def expand_wildcards(args: List[str], config: Dict[str, Any]) -> List[str]:
     """
     # Check if glob expansion is disabled
     # Handle None values in config (malformed config)
-    glob_config = config.get('glob', {})
+    glob_config = config.get("glob", {})
     if glob_config is None:
         glob_config = {}
-    if not glob_config.get('enabled', True):
+    if not glob_config.get("enabled", True):
         return args
 
     expanded_args = []
@@ -137,5 +137,4 @@ def _contains_wildcard(arg: str) -> bool:
         >>> _contains_wildcard('regular_file.txt')
         False
     """
-    return '*' in arg or '?' in arg or '[' in arg
-
+    return "*" in arg or "?" in arg or "[" in arg

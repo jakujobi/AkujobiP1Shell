@@ -12,4 +12,3 @@ from akujobip1.shell import cli
 
 if __name__ == "__main__":
     sys.exit(cli())
-
