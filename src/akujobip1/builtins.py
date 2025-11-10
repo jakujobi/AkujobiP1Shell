@@ -53,7 +53,11 @@ class ExitCommand(BuiltinCommand):
             -1
         """
         # Get exit message from config
-        message = config.get('exit', {}).get('message', 'Bye!')
+        # Handle None values in config (malformed config)
+        exit_config = config.get("exit", {})
+        if exit_config is None:
+            exit_config = {}
+        message = exit_config.get("message", "Bye!")
         print(message)
 
         # Return -1 to signal shell to exit
@@ -95,8 +99,8 @@ class CdCommand(BuiltinCommand):
         # Determine target directory
         if len(args) == 1:
             # No arguments - go to home directory
-            target = os.path.expanduser('~')
-        elif args[1] == '-':
+            target = os.path.expanduser("~")
+        elif args[1] == "-":
             # cd - go to previous directory
             if self._previous_directory is None:
                 print("cd: OLDPWD not set", file=sys.stderr)
@@ -135,7 +139,14 @@ class CdCommand(BuiltinCommand):
             CdCommand._previous_directory = current
 
         # Optionally show pwd after cd
-        if config.get('builtins', {}).get('cd', {}).get('show_pwd_after', False):
+        # Handle None values in config (malformed config)
+        builtins_config = config.get("builtins", {})
+        if builtins_config is None:
+            builtins_config = {}
+        cd_config = builtins_config.get("cd", {})
+        if cd_config is None:
+            cd_config = {}
+        if cd_config.get("show_pwd_after", False):
             print(os.getcwd())
 
         return 0
@@ -162,7 +173,7 @@ class PwdCommand(BuiltinCommand):
         Example:
             >>> cmd = PwdCommand()
             >>> cmd.execute(['pwd'], {})
-            /home/user
+            /current/working/directory
             0
         """
         try:
@@ -212,10 +223,10 @@ class HelpCommand(BuiltinCommand):
 
 # Built-in command registry
 BUILTINS: Dict[str, BuiltinCommand] = {
-    'exit': ExitCommand(),
-    'cd': CdCommand(),
-    'pwd': PwdCommand(),
-    'help': HelpCommand()
+    "exit": ExitCommand(),
+    "cd": CdCommand(),
+    "pwd": PwdCommand(),
+    "help": HelpCommand(),
 }
 
 
@@ -230,4 +241,3 @@ def get_builtin(name: str) -> Optional[BuiltinCommand]:
         BuiltinCommand instance or None if not found
     """
     return BUILTINS.get(name)
-
