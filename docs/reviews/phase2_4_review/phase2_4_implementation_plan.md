@@ -98,7 +98,7 @@ def function(args: List[str], config: Dict[str, Any]) -> int:
     'show_fork_pids': False
 }
 ```
-✅ **Safe to use** - These keys exist in default config
+ SUCCESS **Safe to use** - These keys exist in default config
 
 **Point 2: Parser Output**
 ```python
@@ -107,14 +107,14 @@ def function(args: List[str], config: Dict[str, Any]) -> int:
 # Never returns None
 # args[0] is always command name if list is non-empty
 ```
-✅ **Safe to use** - Well-defined contract
+ SUCCESS **Safe to use** - Well-defined contract
 
 **Point 3: Signal Handling**
 ```python
 # Child must reset signal handlers:
 signal.signal(signal.SIGINT, signal.SIG_DFL)
 ```
-⚠️ **Critical** - Without this, Ctrl+C will kill parent shell
+ **Critical** - Without this, Ctrl+C will kill parent shell
 
 ### 2.3 Potential Issues & Bugs Identified
 
@@ -217,7 +217,7 @@ def execute_external_command(args, config):
 - Missing debug output
 - No platform detection
 
-**Verdict:** ✅ **BEST starting point** - Simple, correct, testable
+**Verdict:**  SUCCESS **BEST starting point** - Simple, correct, testable
 
 ---
 
@@ -256,7 +256,7 @@ def execute_external_command(args, config):
 - Parser already validates input
 - Slightly harder to test (more code paths)
 
-**Verdict:** ✅ **BEST for production** - Comprehensive, robust
+**Verdict:**  SUCCESS **BEST for production** - Comprehensive, robust
 
 ---
 
@@ -283,7 +283,7 @@ def execute_external_command(args, config):
 - Would need to test both code paths
 - Subprocess doesn't demonstrate process management
 
-**Verdict:** ❌ **Out of scope** - Assignment requires POSIX syscalls
+**Verdict:**  **Out of scope** - Assignment requires POSIX syscalls
 
 ---
 
